@@ -72,15 +72,15 @@ Navigate to /items, /categories, /warehouses, etc. to manage records
 Use the Add Adjustment page to transfer or add stock.
 All forms use dynamic dropdowns from existing categories/suppliers/etc.
 
-🌐 Deployment
-```
-This project is easily deployable on Vercel:
-Push the project to GitHub
-Import it into Vercel
-Set environment variables in Vercel:
-DATABASE_URL
-NEXT_PUBLIC_BASE_URL (optional, set to Vercel app URL)
-```
+## 🌐 Deployment
+
+This project is easily deployable on Vercel:  
+Push the project to GitHub  
+Import it into Vercel  
+Set environment variables in Vercel:  
+- `DATABASE_URL`  
+- `NEXT_PUBLIC_BASE_URL` (optional, set to Vercel app URL)
+
 
 🙌 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
@@ -92,8 +92,8 @@ This project is licensed under the MIT License
 For questions or freelance inquiries, feel free to reach out:
 
 Name: Sushma Yadav
-GitHub: https://github.com/yadavsushma999
-Email: yadavsushma313@gmail.com
+- GitHub: https://github.com/yadavsushma999
+- Email: yadavsushma313@gmail.com
 
 
 
