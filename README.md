@@ -1,4 +1,4 @@
-# 📦 Inventory Management System
+# 📦 Inventory Management System   (Currently Working....)
 
 An easy-to-use and responsive **Inventory Management System** built using **Next.js App Router**, **Prisma ORM**, and **Tailwind CSS**. This system helps small to mid-sized businesses efficiently manage their stock, warehouses, and suppliers.
 
