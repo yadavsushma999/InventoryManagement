@@ -2,7 +2,8 @@ import db from "@/lib/db";
 import { NextResponse } from "next/server";
 
 
-export async function GET(request, { params: { id } }) {
+export async function GET(request,context) {
+    const { id } = context.params;
     try {
         const item = await db.item.findUnique({
             where: {
@@ -24,7 +25,8 @@ export async function GET(request, { params: { id } }) {
     }
 }
 
-export async function PUT(request, { params: { id } }) {
+export async function PUT(request, context) {
+    const { id } = context.params;
 
     try {
         const itemData = await request.json();
