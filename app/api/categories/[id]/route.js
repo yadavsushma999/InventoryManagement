@@ -2,7 +2,8 @@ import db from "@/lib/db";
 import { NextResponse } from "next/server";
 
 
-export async function GET(request, { params: { id } }) {
+export async function GET(request, context) {
+    const { id } = context.params;
     try {
         const category = await db.category.findUnique({
             where: {
@@ -21,7 +22,8 @@ export async function GET(request, { params: { id } }) {
     }
 }
 
-export async function PUT(request, { params: { id } }) {
+export async function PUT(request, context) {
+    const { id } = context.params;
     const { title, description } = await request.json()
     try {
         const category = await db.category.update({

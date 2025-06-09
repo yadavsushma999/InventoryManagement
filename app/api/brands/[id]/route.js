@@ -1,45 +1,54 @@
 import db from "@/lib/db";
 import { NextResponse } from "next/server";
 
+// GET /api/brands/[id]
+export async function GET(request, context) {
+    const { id } = context.params;
 
-export async function GET(request, { params: { id } }) {
     try {
         const brand = await db.brand.findUnique({
             where: {
-                id
-            }
-        })
+                id,
+            },
+        });
+
         return NextResponse.json(brand);
     } catch (error) {
-        console.log(error)
-        return NextResponse.json({
-            error,
-            message: "Failed to fetch the Brand"
-        }, {
-            status: 500
-        })
+        console.error(error);
+        return NextResponse.json(
+            {
+                message: "Failed to fetch the Brand",
+                error: error.message || error,
+            },
+            { status: 500 }
+        );
     }
 }
 
-export async function PUT(request, { params: { id } }) {
-    const { title } = await request.json()
+// PUT /api/brands/[id]
+export async function PUT(request, context) {
+    const { id } = context.params;
+    const { title } = await request.json();
+
     try {
         const brand = await db.brand.update({
             where: {
-                id
+                id,
             },
             data: {
-                title
-            }
-        })
+                title,
+            },
+        });
+
         return NextResponse.json(brand);
     } catch (error) {
-        console.log(error)
-        return NextResponse.json({
-            error,
-            message: "Failed to Update the Brand"
-        }, {
-            status: 500
-        })
+        console.error(error);
+        return NextResponse.json(
+            {
+                message: "Failed to update the Brand",
+                error: error.message || error,
+            },
+            { status: 500 }
+        );
     }
 }
