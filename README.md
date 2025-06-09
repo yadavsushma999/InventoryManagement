@@ -36,6 +36,9 @@ An easy-to-use and responsive **Inventory Management System** built using **Next
 ✅ Form Management:
 - Uses `react-hook-form` for easy validation and reset
 
+## 🌐 Preview
+Vercel Link: https://inventory-management-navy.vercel.app
+
 ---
 ## 🛠️ Installation & Setup
 
@@ -81,7 +84,7 @@ Set environment variables in Vercel:
 - `DATABASE_URL`  
 - `NEXT_PUBLIC_BASE_URL` (optional, set to Vercel app URL)
 
-
+ 
 🙌 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
