@@ -6,6 +6,7 @@ import React from 'react'
 export default async function Units() {
     const units = await getData("units");
     const columns = ["title","abbreviation"]
+    const activeUnits = units.filter(unit => unit.isActive !== false);
 
     return (
         <div>
@@ -13,7 +14,7 @@ export default async function Units() {
             <FixedHeader title="Units" newLink="/dashboard/inventory/units/new" />
             {/**Form */}
             <div className="my-4 p-8">
-                <DataTable data={units} columns={columns} resourceTitle="units" />
+                <DataTable data={activeUnits} columns={columns} resourceTitle="units" />
             </div>
             {/** */}
         </div>

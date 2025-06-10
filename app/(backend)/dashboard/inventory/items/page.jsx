@@ -6,13 +6,14 @@ import React from 'react'
 export default async function Items() {
     const items = await getData("items");
     const columns = ["imageUrl","title","sellingPrice","category.title"]
+      const activeItems = items.filter(item => item.isActive !== false);
     return (
         <div>
             {/**Head<Fer */}
             <FixedHeader title="Items" newLink="/dashboard/inventory/items/new" />
             {/**Form */}
             <div className="my-4 p-8">
-                <DataTable data={items} columns={columns} resourceTitle="items" />
+                <DataTable data={activeItems} columns={columns} resourceTitle="items" />
             </div>
             {/** */}
         </div>

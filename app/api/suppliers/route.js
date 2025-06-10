@@ -47,3 +47,49 @@ export async function GET(request) {
         })
     }
 }
+
+
+export async function DELETE(request) {
+    try {
+        const id = request.nextUrl.searchParams.get("id");
+
+        if (!id) {
+            return NextResponse.json({ message: "Supplier ID is required" }, { status: 400 });
+        }
+
+        try {
+            const deletedSupplier = await db.supplier.delete({
+                where: { id }
+            });
+
+            return NextResponse.json({ message: "Supplier hard deleted", item: deletedSupplier });
+        } catch (error) {
+            if (error?.code === "P2014") {
+                console.warn("⚠️ Hard delete failed due to relation. Falling back to soft delete.");
+
+                const softDeletedSupplier = await db.supplier.update({
+                    where: { id },
+                    data: {
+                        isActive: false,
+                        deletedAt: new Date()
+                    }
+                });
+
+                return NextResponse.json({
+                    message: "Supplier soft deleted due to relation constraint",
+                    item: softDeletedSupplier
+                });
+            }
+
+            throw error; 
+        }
+    } catch (error) {
+        return NextResponse.json({
+            message: "Failed to Delete the ",
+            error: {
+                code: error.code || "UNKNOWN",
+                message: error.message || String(error)
+            }
+        }, { status: 500 });
+    }
+}

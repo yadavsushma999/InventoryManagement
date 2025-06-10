@@ -41,7 +41,7 @@ export default function DataTable({ data = [], columns = [], resourceTitle }) {
                                     })}*/}
 
                                     {columns.map((columnName, i) => (
-                                        <td key={i} className="px-6 py-4">
+                                        <td key={i} className="px-6 py-4 ">
                                             {columnName.includes(".") ? (
                                                 // If the column name contains a dot, it's a nested object
                                                 // Access the nested key using reduce
@@ -49,7 +49,8 @@ export default function DataTable({ data = [], columns = [], resourceTitle }) {
                                             ) : columnName === "createdAt" ||
                                                 columnName === "updatedAt" ? (
                                                 // Convert date columns to a more readable format
-                                                new Date(item[columnName]).toLocaleDateString()
+                                               new Date(item[columnName]).toLocaleDateString("en-GB") // or "en-US"
+
                                             ) : columnName === "imageUrl" ? (
                                                 // Special handling for imageUrl to render an image
                                                 <img

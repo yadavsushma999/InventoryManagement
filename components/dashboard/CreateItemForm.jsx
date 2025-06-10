@@ -86,7 +86,7 @@ export default function CreateItemForm({ categories, units, brands,
                     />
                     <TextInput
                         label="Item Quantity"
-                        name="qty"
+                        name="quantity"
                         register={register}
                         errors={errors}
                         className='w-full'

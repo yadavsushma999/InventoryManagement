@@ -134,6 +134,8 @@ exports.Prisma.ItemScalarFieldEnum = {
   dimensions: 'dimensions',
   taxRate: 'taxRate',
   notes: 'notes',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -143,7 +145,9 @@ exports.Prisma.CategoryScalarFieldEnum = {
   title: 'title',
   description: 'description',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.UnitScalarFieldEnum = {
@@ -151,14 +155,18 @@ exports.Prisma.UnitScalarFieldEnum = {
   title: 'title',
   abbreviation: 'abbreviation',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.BrandScalarFieldEnum = {
   id: 'id',
   title: 'title',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.WarehouseScalarFieldEnum = {
@@ -168,7 +176,9 @@ exports.Prisma.WarehouseScalarFieldEnum = {
   description: 'description',
   warehouseType: 'warehouseType',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.AddStockAdjustmentScalarFieldEnum = {
@@ -206,7 +216,9 @@ exports.Prisma.SupplierScalarFieldEnum = {
   taxID: 'taxID',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.SortOrder = {
