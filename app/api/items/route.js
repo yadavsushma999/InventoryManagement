@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db"; // Make sure this import is correct for your Prisma client
-import { profile } from "console";
+
 
 export async function POST(request) {
     try {
@@ -14,7 +14,7 @@ export async function POST(request) {
                 categoryId: itemData.categoryId,
                 sku: itemData.sku,
                 barcode: itemData.barcode,
-                quantity: parseInt(itemData.qty || "0"),
+                quantity: parseInt(itemData.quantity || "0"),
                 unitId: itemData.unitId,
                 brandId: itemData.brandId,
                 buyingPrice: parseFloat(itemData.buyingPrice || "0"),
@@ -50,8 +50,8 @@ export async function GET(request) {
                 createdAt: 'desc' //Latest warehouse
             },
             include: {
-                category:true,
-                supplier:true,
+                category: true,
+                supplier: true,
             }
         })
         return NextResponse.json(items);
@@ -63,5 +63,50 @@ export async function GET(request) {
         }, {
             status: 500
         })
+    }
+}
+
+export async function DELETE(request) {
+    try {
+        const id = request.nextUrl.searchParams.get("id");
+
+        if (!id) {
+            return NextResponse.json({ message: "Item ID is required" }, { status: 400 });
+        }
+
+        try {
+            const deletedItem = await db.item.delete({
+                where: { id }
+            });
+
+            return NextResponse.json({ message: "Item hard deleted", item: deletedItem });
+        } catch (error) {
+            if (error?.code === "P2014") {
+                console.warn("⚠️ Hard delete failed due to relation. Falling back to soft delete.");
+
+                const softDeletedItem = await db.item.update({
+                    where: { id },
+                    data: {
+                        isActive: false,
+                        deletedAt: new Date()
+                    }
+                });
+
+                return NextResponse.json({
+                    message: "Item soft deleted due to relation constraint",
+                    item: softDeletedItem
+                });
+            }
+
+            throw error; 
+        }
+    } catch (error) {
+        return NextResponse.json({
+            message: "Failed to Delete the ",
+            error: {
+                code: error.code || "UNKNOWN",
+                message: error.message || String(error)
+            }
+        }, { status: 500 });
     }
 }

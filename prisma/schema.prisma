@@ -40,6 +40,8 @@ model Item {
   dimensions   String?
   taxRate      Float
   notes        String?
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
   AddStockAdjustment      AddStockAdjustment[]
   TransferStockAdjustment TransferStockAdjustment[]
   createdAt DateTime @default(now())
@@ -53,6 +55,8 @@ model Category {
   Item        Item[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
 }
 
 model Unit {
@@ -62,6 +66,8 @@ model Unit {
   Item         Item[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
 }
 
 model Brand {
@@ -70,6 +76,8 @@ model Brand {
   Item  Item[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
 }
 
 model Warehouse {
@@ -81,6 +89,8 @@ model Warehouse {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Item Item[]
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
 }
 
 model AddStockAdjustment {
@@ -122,4 +132,6 @@ model Supplier {
   Item        Item[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
 }
