@@ -1,6 +1,7 @@
 import CreateItemForm from '@/components/dashboard/CreateItemForm';
 import FormHeader from '@/components/dashboard/FormHeader';
 import { getData } from '@/lib/getData';
+export const dynamic = "force-dynamic"
 
 export default async function NewItem({ initialData = {}, isUpdate = false }) {
   // Fetch all data in parallel
