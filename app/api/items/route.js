@@ -5,41 +5,60 @@ import db from "@/lib/db"; // Make sure this import is correct for your Prisma c
 export async function POST(request) {
     try {
         const itemData = await request.json();
-        console.log("Received item data:", itemData); // Log incoming request
+        console.log("Received item data:", itemData);
 
-        const item = await db.item.create({
-            data: {
-                title: itemData.title,
-                description: itemData.description || "", // Provide defaults if needed
-                categoryId: itemData.categoryId,
-                sku: itemData.sku,
-                barcode: itemData.barcode,
-                quantity: parseInt(itemData.quantity || "0"),
-                unitId: itemData.unitId,
-                brandId: itemData.brandId,
-                buyingPrice: parseFloat(itemData.buyingPrice || "0"),
-                sellingPrice: parseFloat(itemData.sellingPrice || "0"),
-                supplierId: itemData.supplierId,
-                reOrderPoint: parseInt(itemData.reOrderPoint || "0"),
-                warehouseId: itemData.warehouseId,
-                imageUrl: itemData.imageUrl || "",
-                weight: parseFloat(itemData.weight || "0"),
-                dimensions: itemData.dimensions || "",
-                taxRate: parseFloat(itemData.taxRate || "0"),
-                notes: itemData.notes || ""
-            }
+        const qty = parseInt(itemData.quantity || "0");
+        if (isNaN(qty)) {
+            throw new Error("Quantity must be a valid number");
+        }
+
+        const warehouse = await db.warehouse.findUnique({
+            where: { id: itemData.warehouseId },
         });
+
+        if (!warehouse) {
+            return NextResponse.json(
+                { message: `Warehouse ${itemData.warehouseId} not found` },
+                { status: 404 }
+            );
+        }
+
+        const [updatedWarehouse, item] = await db.$transaction([
+            db.warehouse.update({
+                where: { id: itemData.warehouseId },
+                data: { stockQty: { increment: qty } },
+            }),
+            db.item.create({
+                data: {
+                    title: itemData.title,
+                    description: itemData.description || "",
+                    categoryId: itemData.categoryId,
+                    sku: itemData.sku,
+                    barcode: itemData.barcode,
+                    quantity: qty,
+                    unitId: itemData.unitId,
+                    brandId: itemData.brandId,
+                    buyingPrice: parseFloat(itemData.buyingPrice || "0"),
+                    sellingPrice: parseFloat(itemData.sellingPrice || "0"),
+                    supplierId: itemData.supplierId,
+                    reOrderPoint: parseInt(itemData.reOrderPoint || "0"),
+                    warehouseId: itemData.warehouseId,
+                    imageUrl: itemData.imageUrl || "",
+                    weight: parseFloat(itemData.weight || "0"),
+                    dimensions: itemData.dimensions || "",
+                    taxRate: parseFloat(itemData.taxRate || "0"),
+                    notes: itemData.notes || "",
+                },
+            }),
+        ]);
 
         return NextResponse.json(item);
     } catch (error) {
-        console.error("Error creating item:", error); // Log full error in terminal
-
-        return NextResponse.json({
-            message: "Failed to create an item",
-            error: error.message || error
-        }, {
-            status: 500
-        });
+        console.error("Error creating item:", error);
+        return NextResponse.json(
+            { message: "Failed to create an item", error: error.message || error },
+            { status: 500 }
+        );
     }
 }
 
@@ -51,7 +70,8 @@ export async function GET(request) {
             },
             include: {
                 category: true,
-                supplier: true,
+                warehouse: true,
+
             }
         })
         return NextResponse.json(items);
@@ -98,7 +118,7 @@ export async function DELETE(request) {
                 });
             }
 
-            throw error; 
+            throw error;
         }
     } catch (error) {
         return NextResponse.json({
