@@ -8,6 +8,9 @@ export async function GET(request, context) {
         const warehouse = await db.warehouse.findUnique({
             where: {
                 id
+            },
+            include: {
+                item: true,
             }
         })
         return NextResponse.json(warehouse);

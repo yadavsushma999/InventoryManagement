@@ -1625,10 +1625,12 @@ export namespace Prisma {
 
   export type SupplierCountOutputType = {
     Item: number
+    AddStockAdjustment: number
   }
 
   export type SupplierCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Item?: boolean | SupplierCountOutputTypeCountItemArgs
+    AddStockAdjustment?: boolean | SupplierCountOutputTypeCountAddStockAdjustmentArgs
   }
 
   // Custom InputTypes
@@ -1647,6 +1649,13 @@ export namespace Prisma {
    */
   export type SupplierCountOutputTypeCountItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ItemWhereInput
+  }
+
+  /**
+   * SupplierCountOutputType without action
+   */
+  export type SupplierCountOutputTypeCountAddStockAdjustmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AddStockAdjustmentWhereInput
   }
 
 
@@ -6046,8 +6055,18 @@ export namespace Prisma {
 
   export type AggregateWarehouse = {
     _count: WarehouseCountAggregateOutputType | null
+    _avg: WarehouseAvgAggregateOutputType | null
+    _sum: WarehouseSumAggregateOutputType | null
     _min: WarehouseMinAggregateOutputType | null
     _max: WarehouseMaxAggregateOutputType | null
+  }
+
+  export type WarehouseAvgAggregateOutputType = {
+    stockQty: number | null
+  }
+
+  export type WarehouseSumAggregateOutputType = {
+    stockQty: number | null
   }
 
   export type WarehouseMinAggregateOutputType = {
@@ -6056,6 +6075,7 @@ export namespace Prisma {
     location: string | null
     description: string | null
     warehouseType: string | null
+    stockQty: number | null
     createdAt: Date | null
     updatedAt: Date | null
     isActive: boolean | null
@@ -6068,6 +6088,7 @@ export namespace Prisma {
     location: string | null
     description: string | null
     warehouseType: string | null
+    stockQty: number | null
     createdAt: Date | null
     updatedAt: Date | null
     isActive: boolean | null
@@ -6080,6 +6101,7 @@ export namespace Prisma {
     location: number
     description: number
     warehouseType: number
+    stockQty: number
     createdAt: number
     updatedAt: number
     isActive: number
@@ -6088,12 +6110,21 @@ export namespace Prisma {
   }
 
 
+  export type WarehouseAvgAggregateInputType = {
+    stockQty?: true
+  }
+
+  export type WarehouseSumAggregateInputType = {
+    stockQty?: true
+  }
+
   export type WarehouseMinAggregateInputType = {
     id?: true
     title?: true
     location?: true
     description?: true
     warehouseType?: true
+    stockQty?: true
     createdAt?: true
     updatedAt?: true
     isActive?: true
@@ -6106,6 +6137,7 @@ export namespace Prisma {
     location?: true
     description?: true
     warehouseType?: true
+    stockQty?: true
     createdAt?: true
     updatedAt?: true
     isActive?: true
@@ -6118,6 +6150,7 @@ export namespace Prisma {
     location?: true
     description?: true
     warehouseType?: true
+    stockQty?: true
     createdAt?: true
     updatedAt?: true
     isActive?: true
@@ -6163,6 +6196,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: WarehouseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WarehouseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: WarehouseMinAggregateInputType
@@ -6193,6 +6238,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: WarehouseCountAggregateInputType | true
+    _avg?: WarehouseAvgAggregateInputType
+    _sum?: WarehouseSumAggregateInputType
     _min?: WarehouseMinAggregateInputType
     _max?: WarehouseMaxAggregateInputType
   }
@@ -6203,11 +6250,14 @@ export namespace Prisma {
     location: string | null
     description: string | null
     warehouseType: string
+    stockQty: number
     createdAt: Date
     updatedAt: Date
     isActive: boolean
     deletedAt: Date | null
     _count: WarehouseCountAggregateOutputType | null
+    _avg: WarehouseAvgAggregateOutputType | null
+    _sum: WarehouseSumAggregateOutputType | null
     _min: WarehouseMinAggregateOutputType | null
     _max: WarehouseMaxAggregateOutputType | null
   }
@@ -6232,6 +6282,7 @@ export namespace Prisma {
     location?: boolean
     description?: boolean
     warehouseType?: boolean
+    stockQty?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isActive?: boolean
@@ -6248,13 +6299,14 @@ export namespace Prisma {
     location?: boolean
     description?: boolean
     warehouseType?: boolean
+    stockQty?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isActive?: boolean
     deletedAt?: boolean
   }
 
-  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "location" | "description" | "warehouseType" | "createdAt" | "updatedAt" | "isActive" | "deletedAt", ExtArgs["result"]["warehouse"]>
+  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "location" | "description" | "warehouseType" | "stockQty" | "createdAt" | "updatedAt" | "isActive" | "deletedAt", ExtArgs["result"]["warehouse"]>
   export type WarehouseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Item?: boolean | Warehouse$ItemArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
@@ -6271,6 +6323,7 @@ export namespace Prisma {
       location: string | null
       description: string | null
       warehouseType: string
+      stockQty: number
       createdAt: Date
       updatedAt: Date
       isActive: boolean
@@ -6673,6 +6726,7 @@ export namespace Prisma {
     readonly location: FieldRef<"Warehouse", 'String'>
     readonly description: FieldRef<"Warehouse", 'String'>
     readonly warehouseType: FieldRef<"Warehouse", 'String'>
+    readonly stockQty: FieldRef<"Warehouse", 'Int'>
     readonly createdAt: FieldRef<"Warehouse", 'DateTime'>
     readonly updatedAt: FieldRef<"Warehouse", 'DateTime'>
     readonly isActive: FieldRef<"Warehouse", 'Boolean'>
@@ -7116,6 +7170,7 @@ export namespace Prisma {
     notes: string | null
     receivingWarehouseId: string | null
     itemId: string | null
+    supplierId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7127,6 +7182,7 @@ export namespace Prisma {
     notes: string | null
     receivingWarehouseId: string | null
     itemId: string | null
+    supplierId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7138,6 +7194,7 @@ export namespace Prisma {
     notes: number
     receivingWarehouseId: number
     itemId: number
+    supplierId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7159,6 +7216,7 @@ export namespace Prisma {
     notes?: true
     receivingWarehouseId?: true
     itemId?: true
+    supplierId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7170,6 +7228,7 @@ export namespace Prisma {
     notes?: true
     receivingWarehouseId?: true
     itemId?: true
+    supplierId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7181,6 +7240,7 @@ export namespace Prisma {
     notes?: true
     receivingWarehouseId?: true
     itemId?: true
+    supplierId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7279,6 +7339,7 @@ export namespace Prisma {
     notes: string | null
     receivingWarehouseId: string
     itemId: string
+    supplierId: string
     createdAt: Date
     updatedAt: Date
     _count: AddStockAdjustmentCountAggregateOutputType | null
@@ -7309,9 +7370,11 @@ export namespace Prisma {
     notes?: boolean
     receivingWarehouseId?: boolean
     itemId?: boolean
+    supplierId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
+    supplier?: boolean | SupplierDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["addStockAdjustment"]>
 
 
@@ -7323,19 +7386,22 @@ export namespace Prisma {
     notes?: boolean
     receivingWarehouseId?: boolean
     itemId?: boolean
+    supplierId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AddStockAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "referenceNumber" | "addStockQty" | "notes" | "receivingWarehouseId" | "itemId" | "createdAt" | "updatedAt", ExtArgs["result"]["addStockAdjustment"]>
+  export type AddStockAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "referenceNumber" | "addStockQty" | "notes" | "receivingWarehouseId" | "itemId" | "supplierId" | "createdAt" | "updatedAt", ExtArgs["result"]["addStockAdjustment"]>
   export type AddStockAdjustmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
+    supplier?: boolean | SupplierDefaultArgs<ExtArgs>
   }
 
   export type $AddStockAdjustmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AddStockAdjustment"
     objects: {
       item: Prisma.$ItemPayload<ExtArgs>
+      supplier: Prisma.$SupplierPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7344,6 +7410,7 @@ export namespace Prisma {
       notes: string | null
       receivingWarehouseId: string
       itemId: string
+      supplierId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["addStockAdjustment"]>
@@ -7710,6 +7777,7 @@ export namespace Prisma {
   export interface Prisma__AddStockAdjustmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    supplier<T extends SupplierDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SupplierDefaultArgs<ExtArgs>>): Prisma__SupplierClient<$Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7745,6 +7813,7 @@ export namespace Prisma {
     readonly notes: FieldRef<"AddStockAdjustment", 'String'>
     readonly receivingWarehouseId: FieldRef<"AddStockAdjustment", 'String'>
     readonly itemId: FieldRef<"AddStockAdjustment", 'String'>
+    readonly supplierId: FieldRef<"AddStockAdjustment", 'String'>
     readonly createdAt: FieldRef<"AddStockAdjustment", 'DateTime'>
     readonly updatedAt: FieldRef<"AddStockAdjustment", 'DateTime'>
   }
@@ -9429,6 +9498,7 @@ export namespace Prisma {
     isActive?: boolean
     deletedAt?: boolean
     Item?: boolean | Supplier$ItemArgs<ExtArgs>
+    AddStockAdjustment?: boolean | Supplier$AddStockAdjustmentArgs<ExtArgs>
     _count?: boolean | SupplierCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["supplier"]>
 
@@ -9454,6 +9524,7 @@ export namespace Prisma {
   export type SupplierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "phone" | "email" | "address" | "contactPerson" | "supplierCode" | "paymentTerms" | "taxID" | "notes" | "createdAt" | "updatedAt" | "isActive" | "deletedAt", ExtArgs["result"]["supplier"]>
   export type SupplierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Item?: boolean | Supplier$ItemArgs<ExtArgs>
+    AddStockAdjustment?: boolean | Supplier$AddStockAdjustmentArgs<ExtArgs>
     _count?: boolean | SupplierCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -9461,6 +9532,7 @@ export namespace Prisma {
     name: "Supplier"
     objects: {
       Item: Prisma.$ItemPayload<ExtArgs>[]
+      AddStockAdjustment: Prisma.$AddStockAdjustmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9841,6 +9913,7 @@ export namespace Prisma {
   export interface Prisma__SupplierClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Item<T extends Supplier$ItemArgs<ExtArgs> = {}>(args?: Subset<T, Supplier$ItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    AddStockAdjustment<T extends Supplier$AddStockAdjustmentArgs<ExtArgs> = {}>(args?: Subset<T, Supplier$AddStockAdjustmentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AddStockAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10278,6 +10351,30 @@ export namespace Prisma {
   }
 
   /**
+   * Supplier.AddStockAdjustment
+   */
+  export type Supplier$AddStockAdjustmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AddStockAdjustment
+     */
+    select?: AddStockAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AddStockAdjustment
+     */
+    omit?: AddStockAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AddStockAdjustmentInclude<ExtArgs> | null
+    where?: AddStockAdjustmentWhereInput
+    orderBy?: AddStockAdjustmentOrderByWithRelationInput | AddStockAdjustmentOrderByWithRelationInput[]
+    cursor?: AddStockAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AddStockAdjustmentScalarFieldEnum | AddStockAdjustmentScalarFieldEnum[]
+  }
+
+  /**
    * Supplier without action
    */
   export type SupplierDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10374,6 +10471,7 @@ export namespace Prisma {
     location: 'location',
     description: 'description',
     warehouseType: 'warehouseType',
+    stockQty: 'stockQty',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     isActive: 'isActive',
@@ -10390,6 +10488,7 @@ export namespace Prisma {
     notes: 'notes',
     receivingWarehouseId: 'receivingWarehouseId',
     itemId: 'itemId',
+    supplierId: 'supplierId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10888,6 +10987,7 @@ export namespace Prisma {
     location?: StringNullableFilter<"Warehouse"> | string | null
     description?: StringNullableFilter<"Warehouse"> | string | null
     warehouseType?: StringFilter<"Warehouse"> | string
+    stockQty?: IntFilter<"Warehouse"> | number
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
     isActive?: BoolFilter<"Warehouse"> | boolean
@@ -10901,6 +11001,7 @@ export namespace Prisma {
     location?: SortOrder
     description?: SortOrder
     warehouseType?: SortOrder
+    stockQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isActive?: SortOrder
@@ -10917,6 +11018,7 @@ export namespace Prisma {
     location?: StringNullableFilter<"Warehouse"> | string | null
     description?: StringNullableFilter<"Warehouse"> | string | null
     warehouseType?: StringFilter<"Warehouse"> | string
+    stockQty?: IntFilter<"Warehouse"> | number
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
     isActive?: BoolFilter<"Warehouse"> | boolean
@@ -10930,13 +11032,16 @@ export namespace Prisma {
     location?: SortOrder
     description?: SortOrder
     warehouseType?: SortOrder
+    stockQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     _count?: WarehouseCountOrderByAggregateInput
+    _avg?: WarehouseAvgOrderByAggregateInput
     _max?: WarehouseMaxOrderByAggregateInput
     _min?: WarehouseMinOrderByAggregateInput
+    _sum?: WarehouseSumOrderByAggregateInput
   }
 
   export type WarehouseScalarWhereWithAggregatesInput = {
@@ -10948,6 +11053,7 @@ export namespace Prisma {
     location?: StringNullableWithAggregatesFilter<"Warehouse"> | string | null
     description?: StringNullableWithAggregatesFilter<"Warehouse"> | string | null
     warehouseType?: StringWithAggregatesFilter<"Warehouse"> | string
+    stockQty?: IntWithAggregatesFilter<"Warehouse"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
     isActive?: BoolWithAggregatesFilter<"Warehouse"> | boolean
@@ -10964,9 +11070,11 @@ export namespace Prisma {
     notes?: StringNullableFilter<"AddStockAdjustment"> | string | null
     receivingWarehouseId?: StringFilter<"AddStockAdjustment"> | string
     itemId?: StringFilter<"AddStockAdjustment"> | string
+    supplierId?: StringFilter<"AddStockAdjustment"> | string
     createdAt?: DateTimeFilter<"AddStockAdjustment"> | Date | string
     updatedAt?: DateTimeFilter<"AddStockAdjustment"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
+    supplier?: XOR<SupplierScalarRelationFilter, SupplierWhereInput>
   }
 
   export type AddStockAdjustmentOrderByWithRelationInput = {
@@ -10976,9 +11084,11 @@ export namespace Prisma {
     notes?: SortOrder
     receivingWarehouseId?: SortOrder
     itemId?: SortOrder
+    supplierId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     item?: ItemOrderByWithRelationInput
+    supplier?: SupplierOrderByWithRelationInput
   }
 
   export type AddStockAdjustmentWhereUniqueInput = Prisma.AtLeast<{
@@ -10991,9 +11101,11 @@ export namespace Prisma {
     notes?: StringNullableFilter<"AddStockAdjustment"> | string | null
     receivingWarehouseId?: StringFilter<"AddStockAdjustment"> | string
     itemId?: StringFilter<"AddStockAdjustment"> | string
+    supplierId?: StringFilter<"AddStockAdjustment"> | string
     createdAt?: DateTimeFilter<"AddStockAdjustment"> | Date | string
     updatedAt?: DateTimeFilter<"AddStockAdjustment"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
+    supplier?: XOR<SupplierScalarRelationFilter, SupplierWhereInput>
   }, "id">
 
   export type AddStockAdjustmentOrderByWithAggregationInput = {
@@ -11003,6 +11115,7 @@ export namespace Prisma {
     notes?: SortOrder
     receivingWarehouseId?: SortOrder
     itemId?: SortOrder
+    supplierId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AddStockAdjustmentCountOrderByAggregateInput
@@ -11022,6 +11135,7 @@ export namespace Prisma {
     notes?: StringNullableWithAggregatesFilter<"AddStockAdjustment"> | string | null
     receivingWarehouseId?: StringWithAggregatesFilter<"AddStockAdjustment"> | string
     itemId?: StringWithAggregatesFilter<"AddStockAdjustment"> | string
+    supplierId?: StringWithAggregatesFilter<"AddStockAdjustment"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AddStockAdjustment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AddStockAdjustment"> | Date | string
   }
@@ -11122,6 +11236,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"Supplier"> | boolean
     deletedAt?: DateTimeNullableFilter<"Supplier"> | Date | string | null
     Item?: ItemListRelationFilter
+    AddStockAdjustment?: AddStockAdjustmentListRelationFilter
   }
 
   export type SupplierOrderByWithRelationInput = {
@@ -11140,6 +11255,7 @@ export namespace Prisma {
     isActive?: SortOrder
     deletedAt?: SortOrder
     Item?: ItemOrderByRelationAggregateInput
+    AddStockAdjustment?: AddStockAdjustmentOrderByRelationAggregateInput
   }
 
   export type SupplierWhereUniqueInput = Prisma.AtLeast<{
@@ -11161,6 +11277,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"Supplier"> | boolean
     deletedAt?: DateTimeNullableFilter<"Supplier"> | Date | string | null
     Item?: ItemListRelationFilter
+    AddStockAdjustment?: AddStockAdjustmentListRelationFilter
   }, "id" | "supplierCode">
 
   export type SupplierOrderByWithAggregationInput = {
@@ -11600,6 +11717,7 @@ export namespace Prisma {
     location?: string | null
     description?: string | null
     warehouseType: string
+    stockQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isActive?: boolean
@@ -11613,6 +11731,7 @@ export namespace Prisma {
     location?: string | null
     description?: string | null
     warehouseType: string
+    stockQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isActive?: boolean
@@ -11625,6 +11744,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseType?: StringFieldUpdateOperationsInput | string
+    stockQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -11637,6 +11757,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseType?: StringFieldUpdateOperationsInput | string
+    stockQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -11650,6 +11771,7 @@ export namespace Prisma {
     location?: string | null
     description?: string | null
     warehouseType: string
+    stockQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isActive?: boolean
@@ -11661,6 +11783,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseType?: StringFieldUpdateOperationsInput | string
+    stockQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -11672,6 +11795,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseType?: StringFieldUpdateOperationsInput | string
+    stockQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -11687,6 +11811,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutAddStockAdjustmentInput
+    supplier: SupplierCreateNestedOneWithoutAddStockAdjustmentInput
   }
 
   export type AddStockAdjustmentUncheckedCreateInput = {
@@ -11696,6 +11821,7 @@ export namespace Prisma {
     notes?: string | null
     receivingWarehouseId: string
     itemId: string
+    supplierId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11708,6 +11834,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutAddStockAdjustmentNestedInput
+    supplier?: SupplierUpdateOneRequiredWithoutAddStockAdjustmentNestedInput
   }
 
   export type AddStockAdjustmentUncheckedUpdateInput = {
@@ -11716,6 +11843,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     receivingWarehouseId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
+    supplierId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11727,6 +11855,7 @@ export namespace Prisma {
     notes?: string | null
     receivingWarehouseId: string
     itemId: string
+    supplierId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11746,6 +11875,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     receivingWarehouseId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
+    supplierId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11845,6 +11975,7 @@ export namespace Prisma {
     isActive?: boolean
     deletedAt?: Date | string | null
     Item?: ItemCreateNestedManyWithoutSupplierInput
+    AddStockAdjustment?: AddStockAdjustmentCreateNestedManyWithoutSupplierInput
   }
 
   export type SupplierUncheckedCreateInput = {
@@ -11863,6 +11994,7 @@ export namespace Prisma {
     isActive?: boolean
     deletedAt?: Date | string | null
     Item?: ItemUncheckedCreateNestedManyWithoutSupplierInput
+    AddStockAdjustment?: AddStockAdjustmentUncheckedCreateNestedManyWithoutSupplierInput
   }
 
   export type SupplierUpdateInput = {
@@ -11880,6 +12012,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Item?: ItemUpdateManyWithoutSupplierNestedInput
+    AddStockAdjustment?: AddStockAdjustmentUpdateManyWithoutSupplierNestedInput
   }
 
   export type SupplierUncheckedUpdateInput = {
@@ -11897,6 +12030,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Item?: ItemUncheckedUpdateManyWithoutSupplierNestedInput
+    AddStockAdjustment?: AddStockAdjustmentUncheckedUpdateManyWithoutSupplierNestedInput
   }
 
   export type SupplierCreateManyInput = {
@@ -12411,10 +12545,15 @@ export namespace Prisma {
     location?: SortOrder
     description?: SortOrder
     warehouseType?: SortOrder
+    stockQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
+  }
+
+  export type WarehouseAvgOrderByAggregateInput = {
+    stockQty?: SortOrder
   }
 
   export type WarehouseMaxOrderByAggregateInput = {
@@ -12423,6 +12562,7 @@ export namespace Prisma {
     location?: SortOrder
     description?: SortOrder
     warehouseType?: SortOrder
+    stockQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isActive?: SortOrder
@@ -12435,10 +12575,15 @@ export namespace Prisma {
     location?: SortOrder
     description?: SortOrder
     warehouseType?: SortOrder
+    stockQty?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
+  }
+
+  export type WarehouseSumOrderByAggregateInput = {
+    stockQty?: SortOrder
   }
 
   export type ItemScalarRelationFilter = {
@@ -12453,6 +12598,7 @@ export namespace Prisma {
     notes?: SortOrder
     receivingWarehouseId?: SortOrder
     itemId?: SortOrder
+    supplierId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12468,6 +12614,7 @@ export namespace Prisma {
     notes?: SortOrder
     receivingWarehouseId?: SortOrder
     itemId?: SortOrder
+    supplierId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12479,6 +12626,7 @@ export namespace Prisma {
     notes?: SortOrder
     receivingWarehouseId?: SortOrder
     itemId?: SortOrder
+    supplierId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12957,12 +13105,26 @@ export namespace Prisma {
     connect?: ItemWhereUniqueInput
   }
 
+  export type SupplierCreateNestedOneWithoutAddStockAdjustmentInput = {
+    create?: XOR<SupplierCreateWithoutAddStockAdjustmentInput, SupplierUncheckedCreateWithoutAddStockAdjustmentInput>
+    connectOrCreate?: SupplierCreateOrConnectWithoutAddStockAdjustmentInput
+    connect?: SupplierWhereUniqueInput
+  }
+
   export type ItemUpdateOneRequiredWithoutAddStockAdjustmentNestedInput = {
     create?: XOR<ItemCreateWithoutAddStockAdjustmentInput, ItemUncheckedCreateWithoutAddStockAdjustmentInput>
     connectOrCreate?: ItemCreateOrConnectWithoutAddStockAdjustmentInput
     upsert?: ItemUpsertWithoutAddStockAdjustmentInput
     connect?: ItemWhereUniqueInput
     update?: XOR<XOR<ItemUpdateToOneWithWhereWithoutAddStockAdjustmentInput, ItemUpdateWithoutAddStockAdjustmentInput>, ItemUncheckedUpdateWithoutAddStockAdjustmentInput>
+  }
+
+  export type SupplierUpdateOneRequiredWithoutAddStockAdjustmentNestedInput = {
+    create?: XOR<SupplierCreateWithoutAddStockAdjustmentInput, SupplierUncheckedCreateWithoutAddStockAdjustmentInput>
+    connectOrCreate?: SupplierCreateOrConnectWithoutAddStockAdjustmentInput
+    upsert?: SupplierUpsertWithoutAddStockAdjustmentInput
+    connect?: SupplierWhereUniqueInput
+    update?: XOR<XOR<SupplierUpdateToOneWithWhereWithoutAddStockAdjustmentInput, SupplierUpdateWithoutAddStockAdjustmentInput>, SupplierUncheckedUpdateWithoutAddStockAdjustmentInput>
   }
 
   export type ItemCreateNestedOneWithoutTransferStockAdjustmentInput = {
@@ -12986,11 +13148,25 @@ export namespace Prisma {
     connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
   }
 
+  export type AddStockAdjustmentCreateNestedManyWithoutSupplierInput = {
+    create?: XOR<AddStockAdjustmentCreateWithoutSupplierInput, AddStockAdjustmentUncheckedCreateWithoutSupplierInput> | AddStockAdjustmentCreateWithoutSupplierInput[] | AddStockAdjustmentUncheckedCreateWithoutSupplierInput[]
+    connectOrCreate?: AddStockAdjustmentCreateOrConnectWithoutSupplierInput | AddStockAdjustmentCreateOrConnectWithoutSupplierInput[]
+    createMany?: AddStockAdjustmentCreateManySupplierInputEnvelope
+    connect?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+  }
+
   export type ItemUncheckedCreateNestedManyWithoutSupplierInput = {
     create?: XOR<ItemCreateWithoutSupplierInput, ItemUncheckedCreateWithoutSupplierInput> | ItemCreateWithoutSupplierInput[] | ItemUncheckedCreateWithoutSupplierInput[]
     connectOrCreate?: ItemCreateOrConnectWithoutSupplierInput | ItemCreateOrConnectWithoutSupplierInput[]
     createMany?: ItemCreateManySupplierInputEnvelope
     connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
+  }
+
+  export type AddStockAdjustmentUncheckedCreateNestedManyWithoutSupplierInput = {
+    create?: XOR<AddStockAdjustmentCreateWithoutSupplierInput, AddStockAdjustmentUncheckedCreateWithoutSupplierInput> | AddStockAdjustmentCreateWithoutSupplierInput[] | AddStockAdjustmentUncheckedCreateWithoutSupplierInput[]
+    connectOrCreate?: AddStockAdjustmentCreateOrConnectWithoutSupplierInput | AddStockAdjustmentCreateOrConnectWithoutSupplierInput[]
+    createMany?: AddStockAdjustmentCreateManySupplierInputEnvelope
+    connect?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
   }
 
   export type ItemUpdateManyWithoutSupplierNestedInput = {
@@ -13007,6 +13183,20 @@ export namespace Prisma {
     deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
   }
 
+  export type AddStockAdjustmentUpdateManyWithoutSupplierNestedInput = {
+    create?: XOR<AddStockAdjustmentCreateWithoutSupplierInput, AddStockAdjustmentUncheckedCreateWithoutSupplierInput> | AddStockAdjustmentCreateWithoutSupplierInput[] | AddStockAdjustmentUncheckedCreateWithoutSupplierInput[]
+    connectOrCreate?: AddStockAdjustmentCreateOrConnectWithoutSupplierInput | AddStockAdjustmentCreateOrConnectWithoutSupplierInput[]
+    upsert?: AddStockAdjustmentUpsertWithWhereUniqueWithoutSupplierInput | AddStockAdjustmentUpsertWithWhereUniqueWithoutSupplierInput[]
+    createMany?: AddStockAdjustmentCreateManySupplierInputEnvelope
+    set?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    disconnect?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    delete?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    connect?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    update?: AddStockAdjustmentUpdateWithWhereUniqueWithoutSupplierInput | AddStockAdjustmentUpdateWithWhereUniqueWithoutSupplierInput[]
+    updateMany?: AddStockAdjustmentUpdateManyWithWhereWithoutSupplierInput | AddStockAdjustmentUpdateManyWithWhereWithoutSupplierInput[]
+    deleteMany?: AddStockAdjustmentScalarWhereInput | AddStockAdjustmentScalarWhereInput[]
+  }
+
   export type ItemUncheckedUpdateManyWithoutSupplierNestedInput = {
     create?: XOR<ItemCreateWithoutSupplierInput, ItemUncheckedCreateWithoutSupplierInput> | ItemCreateWithoutSupplierInput[] | ItemUncheckedCreateWithoutSupplierInput[]
     connectOrCreate?: ItemCreateOrConnectWithoutSupplierInput | ItemCreateOrConnectWithoutSupplierInput[]
@@ -13019,6 +13209,20 @@ export namespace Prisma {
     update?: ItemUpdateWithWhereUniqueWithoutSupplierInput | ItemUpdateWithWhereUniqueWithoutSupplierInput[]
     updateMany?: ItemUpdateManyWithWhereWithoutSupplierInput | ItemUpdateManyWithWhereWithoutSupplierInput[]
     deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
+  }
+
+  export type AddStockAdjustmentUncheckedUpdateManyWithoutSupplierNestedInput = {
+    create?: XOR<AddStockAdjustmentCreateWithoutSupplierInput, AddStockAdjustmentUncheckedCreateWithoutSupplierInput> | AddStockAdjustmentCreateWithoutSupplierInput[] | AddStockAdjustmentUncheckedCreateWithoutSupplierInput[]
+    connectOrCreate?: AddStockAdjustmentCreateOrConnectWithoutSupplierInput | AddStockAdjustmentCreateOrConnectWithoutSupplierInput[]
+    upsert?: AddStockAdjustmentUpsertWithWhereUniqueWithoutSupplierInput | AddStockAdjustmentUpsertWithWhereUniqueWithoutSupplierInput[]
+    createMany?: AddStockAdjustmentCreateManySupplierInputEnvelope
+    set?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    disconnect?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    delete?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    connect?: AddStockAdjustmentWhereUniqueInput | AddStockAdjustmentWhereUniqueInput[]
+    update?: AddStockAdjustmentUpdateWithWhereUniqueWithoutSupplierInput | AddStockAdjustmentUpdateWithWhereUniqueWithoutSupplierInput[]
+    updateMany?: AddStockAdjustmentUpdateManyWithWhereWithoutSupplierInput | AddStockAdjustmentUpdateManyWithWhereWithoutSupplierInput[]
+    deleteMany?: AddStockAdjustmentScalarWhereInput | AddStockAdjustmentScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -13324,6 +13528,7 @@ export namespace Prisma {
     location?: string | null
     description?: string | null
     warehouseType: string
+    stockQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isActive?: boolean
@@ -13336,6 +13541,7 @@ export namespace Prisma {
     location?: string | null
     description?: string | null
     warehouseType: string
+    stockQty?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isActive?: boolean
@@ -13362,6 +13568,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isActive?: boolean
     deletedAt?: Date | string | null
+    AddStockAdjustment?: AddStockAdjustmentCreateNestedManyWithoutSupplierInput
   }
 
   export type SupplierUncheckedCreateWithoutItemInput = {
@@ -13379,6 +13586,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isActive?: boolean
     deletedAt?: Date | string | null
+    AddStockAdjustment?: AddStockAdjustmentUncheckedCreateNestedManyWithoutSupplierInput
   }
 
   export type SupplierCreateOrConnectWithoutItemInput = {
@@ -13394,6 +13602,7 @@ export namespace Prisma {
     receivingWarehouseId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    supplier: SupplierCreateNestedOneWithoutAddStockAdjustmentInput
   }
 
   export type AddStockAdjustmentUncheckedCreateWithoutItemInput = {
@@ -13402,6 +13611,7 @@ export namespace Prisma {
     addStockQty: number
     notes?: string | null
     receivingWarehouseId: string
+    supplierId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13547,6 +13757,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseType?: StringFieldUpdateOperationsInput | string
+    stockQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -13558,6 +13769,7 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warehouseType?: StringFieldUpdateOperationsInput | string
+    stockQty?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -13589,6 +13801,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddStockAdjustment?: AddStockAdjustmentUpdateManyWithoutSupplierNestedInput
   }
 
   export type SupplierUncheckedUpdateWithoutItemInput = {
@@ -13605,6 +13818,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddStockAdjustment?: AddStockAdjustmentUncheckedUpdateManyWithoutSupplierNestedInput
   }
 
   export type AddStockAdjustmentUpsertWithWhereUniqueWithoutItemInput = {
@@ -13633,6 +13847,7 @@ export namespace Prisma {
     notes?: StringNullableFilter<"AddStockAdjustment"> | string | null
     receivingWarehouseId?: StringFilter<"AddStockAdjustment"> | string
     itemId?: StringFilter<"AddStockAdjustment"> | string
+    supplierId?: StringFilter<"AddStockAdjustment"> | string
     createdAt?: DateTimeFilter<"AddStockAdjustment"> | Date | string
     updatedAt?: DateTimeFilter<"AddStockAdjustment"> | Date | string
   }
@@ -14083,6 +14298,47 @@ export namespace Prisma {
     create: XOR<ItemCreateWithoutAddStockAdjustmentInput, ItemUncheckedCreateWithoutAddStockAdjustmentInput>
   }
 
+  export type SupplierCreateWithoutAddStockAdjustmentInput = {
+    id?: string
+    title: string
+    phone?: string | null
+    email?: string | null
+    address?: string | null
+    contactPerson?: string | null
+    supplierCode: string
+    paymentTerms?: string | null
+    taxID?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    Item?: ItemCreateNestedManyWithoutSupplierInput
+  }
+
+  export type SupplierUncheckedCreateWithoutAddStockAdjustmentInput = {
+    id?: string
+    title: string
+    phone?: string | null
+    email?: string | null
+    address?: string | null
+    contactPerson?: string | null
+    supplierCode: string
+    paymentTerms?: string | null
+    taxID?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    Item?: ItemUncheckedCreateNestedManyWithoutSupplierInput
+  }
+
+  export type SupplierCreateOrConnectWithoutAddStockAdjustmentInput = {
+    where: SupplierWhereUniqueInput
+    create: XOR<SupplierCreateWithoutAddStockAdjustmentInput, SupplierUncheckedCreateWithoutAddStockAdjustmentInput>
+  }
+
   export type ItemUpsertWithoutAddStockAdjustmentInput = {
     update: XOR<ItemUpdateWithoutAddStockAdjustmentInput, ItemUncheckedUpdateWithoutAddStockAdjustmentInput>
     create: XOR<ItemCreateWithoutAddStockAdjustmentInput, ItemUncheckedCreateWithoutAddStockAdjustmentInput>
@@ -14146,6 +14402,51 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     TransferStockAdjustment?: TransferStockAdjustmentUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type SupplierUpsertWithoutAddStockAdjustmentInput = {
+    update: XOR<SupplierUpdateWithoutAddStockAdjustmentInput, SupplierUncheckedUpdateWithoutAddStockAdjustmentInput>
+    create: XOR<SupplierCreateWithoutAddStockAdjustmentInput, SupplierUncheckedCreateWithoutAddStockAdjustmentInput>
+    where?: SupplierWhereInput
+  }
+
+  export type SupplierUpdateToOneWithWhereWithoutAddStockAdjustmentInput = {
+    where?: SupplierWhereInput
+    data: XOR<SupplierUpdateWithoutAddStockAdjustmentInput, SupplierUncheckedUpdateWithoutAddStockAdjustmentInput>
+  }
+
+  export type SupplierUpdateWithoutAddStockAdjustmentInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    supplierCode?: StringFieldUpdateOperationsInput | string
+    paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    taxID?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Item?: ItemUpdateManyWithoutSupplierNestedInput
+  }
+
+  export type SupplierUncheckedUpdateWithoutAddStockAdjustmentInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    supplierCode?: StringFieldUpdateOperationsInput | string
+    paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    taxID?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Item?: ItemUncheckedUpdateManyWithoutSupplierNestedInput
   }
 
   export type ItemCreateWithoutTransferStockAdjustmentInput = {
@@ -14339,6 +14640,37 @@ export namespace Prisma {
     data: ItemCreateManySupplierInput | ItemCreateManySupplierInput[]
   }
 
+  export type AddStockAdjustmentCreateWithoutSupplierInput = {
+    id?: string
+    referenceNumber: string
+    addStockQty: number
+    notes?: string | null
+    receivingWarehouseId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: ItemCreateNestedOneWithoutAddStockAdjustmentInput
+  }
+
+  export type AddStockAdjustmentUncheckedCreateWithoutSupplierInput = {
+    id?: string
+    referenceNumber: string
+    addStockQty: number
+    notes?: string | null
+    receivingWarehouseId: string
+    itemId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AddStockAdjustmentCreateOrConnectWithoutSupplierInput = {
+    where: AddStockAdjustmentWhereUniqueInput
+    create: XOR<AddStockAdjustmentCreateWithoutSupplierInput, AddStockAdjustmentUncheckedCreateWithoutSupplierInput>
+  }
+
+  export type AddStockAdjustmentCreateManySupplierInputEnvelope = {
+    data: AddStockAdjustmentCreateManySupplierInput | AddStockAdjustmentCreateManySupplierInput[]
+  }
+
   export type ItemUpsertWithWhereUniqueWithoutSupplierInput = {
     where: ItemWhereUniqueInput
     update: XOR<ItemUpdateWithoutSupplierInput, ItemUncheckedUpdateWithoutSupplierInput>
@@ -14355,12 +14687,29 @@ export namespace Prisma {
     data: XOR<ItemUpdateManyMutationInput, ItemUncheckedUpdateManyWithoutSupplierInput>
   }
 
+  export type AddStockAdjustmentUpsertWithWhereUniqueWithoutSupplierInput = {
+    where: AddStockAdjustmentWhereUniqueInput
+    update: XOR<AddStockAdjustmentUpdateWithoutSupplierInput, AddStockAdjustmentUncheckedUpdateWithoutSupplierInput>
+    create: XOR<AddStockAdjustmentCreateWithoutSupplierInput, AddStockAdjustmentUncheckedCreateWithoutSupplierInput>
+  }
+
+  export type AddStockAdjustmentUpdateWithWhereUniqueWithoutSupplierInput = {
+    where: AddStockAdjustmentWhereUniqueInput
+    data: XOR<AddStockAdjustmentUpdateWithoutSupplierInput, AddStockAdjustmentUncheckedUpdateWithoutSupplierInput>
+  }
+
+  export type AddStockAdjustmentUpdateManyWithWhereWithoutSupplierInput = {
+    where: AddStockAdjustmentScalarWhereInput
+    data: XOR<AddStockAdjustmentUpdateManyMutationInput, AddStockAdjustmentUncheckedUpdateManyWithoutSupplierInput>
+  }
+
   export type AddStockAdjustmentCreateManyItemInput = {
     id?: string
     referenceNumber: string
     addStockQty: number
     notes?: string | null
     receivingWarehouseId: string
+    supplierId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14383,6 +14732,7 @@ export namespace Prisma {
     receivingWarehouseId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    supplier?: SupplierUpdateOneRequiredWithoutAddStockAdjustmentNestedInput
   }
 
   export type AddStockAdjustmentUncheckedUpdateWithoutItemInput = {
@@ -14390,6 +14740,7 @@ export namespace Prisma {
     addStockQty?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     receivingWarehouseId?: StringFieldUpdateOperationsInput | string
+    supplierId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14399,6 +14750,7 @@ export namespace Prisma {
     addStockQty?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     receivingWarehouseId?: StringFieldUpdateOperationsInput | string
+    supplierId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14879,6 +15231,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AddStockAdjustmentCreateManySupplierInput = {
+    id?: string
+    referenceNumber: string
+    addStockQty: number
+    notes?: string | null
+    receivingWarehouseId: string
+    itemId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ItemUpdateWithoutSupplierInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14954,6 +15317,36 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AddStockAdjustmentUpdateWithoutSupplierInput = {
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    addStockQty?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    receivingWarehouseId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: ItemUpdateOneRequiredWithoutAddStockAdjustmentNestedInput
+  }
+
+  export type AddStockAdjustmentUncheckedUpdateWithoutSupplierInput = {
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    addStockQty?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    receivingWarehouseId?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AddStockAdjustmentUncheckedUpdateManyWithoutSupplierInput = {
+    referenceNumber?: StringFieldUpdateOperationsInput | string
+    addStockQty?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    receivingWarehouseId?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

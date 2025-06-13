@@ -8,8 +8,8 @@ export default async function Adjustments() {
   const addAdjustmentsData =  getData("adjustments/add");
   const transferAdjustmentsData =  getData("adjustments/transfer");
   const [addAdjustments,transferAdjustments] = await Promise.all([addAdjustmentsData,transferAdjustmentsData])
-  const addColumns = ["referenceNumber", "addStockQty"];
-  const transferColumns = ["referenceNumber", "transferStockQty"];
+  const addColumns = ["referenceNumber", "addStockQty","createdAt"];
+  const transferColumns = ["referenceNumber", "transferStockQty","createdAt"];
 
   return (
     <div>
@@ -18,11 +18,11 @@ export default async function Adjustments() {
       {/**Form */}
       <div className="my-4 p-8">
         <h2 className='py-4 text-xl font-semibold'> Stock Increment Adjustments</h2>
-        <DataTable data={addAdjustments} columns={addColumns} />
+        <DataTable data={addAdjustments} columns={addColumns} resourceTitle="adjustments/add"/>
       </div>
       <div className="my-4 p-8">
         <h2 className='py-4 text-xl font-semibold'> Stock Transfer Adjustments</h2>
-        <DataTable data={transferAdjustments} columns={transferColumns} />
+        <DataTable data={transferAdjustments} columns={transferColumns} resourceTitle="adjustments/transfer"/>
       </div>
       {/** */}
     </div>

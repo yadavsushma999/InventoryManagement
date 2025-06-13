@@ -175,6 +175,7 @@ exports.Prisma.WarehouseScalarFieldEnum = {
   location: 'location',
   description: 'description',
   warehouseType: 'warehouseType',
+  stockQty: 'stockQty',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isActive: 'isActive',
@@ -188,6 +189,7 @@ exports.Prisma.AddStockAdjustmentScalarFieldEnum = {
   notes: 'notes',
   receivingWarehouseId: 'receivingWarehouseId',
   itemId: 'itemId',
+  supplierId: 'supplierId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

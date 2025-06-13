@@ -23,15 +23,15 @@ model Item {
   sku                     String                    @unique
   barcode                 String?
   quantity                Int
-  unit                    Unit                      @relation(fields: [unitId], references: [id])
+  unit                    Unit                      @relation(fields: [unitId], references: [id], onDelete: Cascade)
   unitId                  String                    @db.ObjectId
-  brand                   Brand                     @relation(fields: [brandId], references: [id])
+  brand                   Brand                     @relation(fields: [brandId], references: [id], onDelete: Cascade)
   brandId                 String                    @db.ObjectId
-  warehouse               Warehouse                 @relation(fields: [warehouseId], references: [id])
+  warehouse               Warehouse                 @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
   warehouseId             String                    @db.ObjectId
   sellingPrice            Float
   buyingPrice             Float
-  supplier                Supplier                  @relation(fields: [supplierId], references: [id])
+  supplier                Supplier                  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   supplierId              String                    @db.ObjectId
   reOrderPoint            Int
   location                String?
@@ -86,6 +86,7 @@ model Warehouse {
   location      String?
   description   String?
   warehouseType String
+  stockQty      Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   Item          Item[]
@@ -99,8 +100,10 @@ model AddStockAdjustment {
   addStockQty          Int
   notes                String?
   receivingWarehouseId String
-  item                 Item     @relation(fields: [itemId], references: [id])
+  item                 Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId               String   @db.ObjectId
+  supplier             Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplierId           String   @db.ObjectId
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
@@ -112,26 +115,27 @@ model TransferStockAdjustment {
   notes                String?
   givingWarehouseId    String
   receivingWarehouseId String
-  item                 Item     @relation(fields: [itemId], references: [id])
+  item                 Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId               String   @db.ObjectId
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
 
 model Supplier {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  phone         String?
-  email         String?
-  address       String?
-  contactPerson String?
-  supplierCode  String    @unique
-  paymentTerms  String?
-  taxID         String?
-  notes         String?
-  Item          Item[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  isActive      Boolean   @default(true)
-  deletedAt     DateTime?
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  phone              String?
+  email              String?
+  address            String?
+  contactPerson      String?
+  supplierCode       String               @unique
+  paymentTerms       String?
+  taxID              String?
+  notes              String?
+  Item               Item[]
+  AddStockAdjustment AddStockAdjustment[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  isActive           Boolean              @default(true)
+  deletedAt          DateTime?
 }
