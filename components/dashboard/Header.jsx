@@ -23,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Loader from './Loader';
 
 export default function Header({ setShowSidebar }) {
   const { data: session, status } = useSession();
@@ -35,7 +36,7 @@ export default function Header({ setShowSidebar }) {
   }, [status, router]);
 
   if (status === 'loading') {
-    return <p>Loading User...</p>;
+    return ;
   }
 
   if (status === 'unauthenticated') {

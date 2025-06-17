@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/dashboard/Header.jsx";
 import Sidebar from "@/components/dashboard/Sidebar.jsx";
+import Loader from "@/components/dashboard/Loader";
 
 export default function Layout({ children }) {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -34,8 +35,8 @@ export default function Layout({ children }) {
         <Header setShowSidebar={setShowSidebar} showSidebar={showSidebar} />
 
         {/* Content conditions */}
-        {isLoading && <p>Loading user. Please wait...</p>}
-        {isRedirecting && <p>Redirecting to login...</p>}
+        {isLoading && <Loader />}
+        {isRedirecting && <Loader message="Redirecting to login...."/>}
         {!isLoading && !isRedirecting && children}
       </main>
     </div>
