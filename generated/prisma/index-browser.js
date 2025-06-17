@@ -223,6 +223,17 @@ exports.Prisma.SupplierScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  hashedPassword: 'hashedPassword',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -242,7 +253,8 @@ exports.Prisma.ModelName = {
   Warehouse: 'Warehouse',
   AddStockAdjustment: 'AddStockAdjustment',
   TransferStockAdjustment: 'TransferStockAdjustment',
-  Supplier: 'Supplier'
+  Supplier: 'Supplier',
+  User: 'User'
 };
 
 /**
