@@ -53,12 +53,15 @@ export default function DataTable({ data = [], columns = [], resourceTitle }) {
                                                         new Date(item[columnName]).toLocaleDateString("en-GB") // or "en-US"
 
                                                     ) : columnName === "imageUrl" ? (
-                                                        // Special handling for imageUrl to render an image
-                                                        <img
-                                                            src={item[columnName]}
-                                                            alt={`Image for ${resourceTitle}`}
-                                                            className="w-10 h-10 object-cover rounded-full"
-                                                        />
+                                                        item[columnName] ? (
+                                                            <img
+                                                                src={item[columnName]}
+                                                                alt={`Image for ${resourceTitle}`}
+                                                                className="w-10 h-10 object-cover rounded-full"
+                                                            />
+                                                        ) : (
+                                                            <span className="text-gray-400 italic">No image</span> // or render nothing/null
+                                                        )
                                                     ) : (
                                                         // Otherwise, display the value as is
                                                         item[columnName]
