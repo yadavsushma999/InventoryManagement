@@ -327,11 +327,12 @@ const config = {
     "db"
   ],
   "activeProvider": "mongodb",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "mongodb+srv://greendiamond2525:QR2kSYVYzURwUQqY@cluster0.yl3jzyz.mongodb.net/inventoryDB?retryWrites=true&w=majority&appName=Cluster0"
+        "value": null
       }
     }
   },
