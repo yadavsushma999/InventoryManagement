@@ -12,49 +12,59 @@ export async function POST(request) {
             notes
         } = await request.json();
 
-        const qty = parseInt(transferStockQty || "0");
+        const qty = parseInt(transferStockQty || "0", 10);
         if (isNaN(qty) || qty <= 0) {
-            return NextResponse.json({
-                message: "transferStockQty must be a positive number"
-            }, { status: 400 });
+            return NextResponse.json({ message: "transferStockQty must be a positive number" }, { status: 400 });
         }
 
-        // ✅ Check giving and receiving are not the same
         if (givingWarehouseId === receivingWarehouseId) {
+            return NextResponse.json({ message: "Giving and Receiving Warehouse cannot be the same" }, { status: 400 });
+        }
+
+        // ✅ Ensure both warehouses exist
+        const [givingWarehouse, receivingWarehouse] = await Promise.all([
+            db.warehouse.findUnique({ where: { id: givingWarehouseId } }),
+            db.warehouse.findUnique({ where: { id: receivingWarehouseId } })
+        ]);
+
+        if (!givingWarehouse) {
+            return NextResponse.json({ message: `Giving Warehouse ${givingWarehouseId} not found` }, { status: 404 });
+        }
+        if (!receivingWarehouse) {
+            return NextResponse.json({ message: `Receiving Warehouse ${receivingWarehouseId} not found` }, { status: 404 });
+        }
+
+        // ✅ Fetch corresponding Location IDs
+        const [givingLocation, receivingLocation] = await Promise.all([
+            db.location.findFirst({
+                where: { warehouseId: givingWarehouseId, type: "warehouse" }
+            }),
+            db.location.findFirst({
+                where: { warehouseId: receivingWarehouseId, type: "warehouse" }
+            })
+        ]);
+
+        if (!givingLocation || !receivingLocation) {
             return NextResponse.json({
-                message: "Giving and Receiving Warehouse cannot be the same"
+                message: "Location entries for one or both warehouses not found. Ensure each warehouse has a linked Location."
             }, { status: 400 });
         }
 
-        // ✅ Validate both warehouses exist
-        const givingWarehouse = await db.warehouse.findUnique({
-            where: { id: givingWarehouseId }
-        });
-        if (!givingWarehouse) {
-            return NextResponse.json({
-                message: `Giving Warehouse ${givingWarehouseId} not found`
-            }, { status: 404 });
-        }
+        const givingLocationId = givingLocation.id;
+        const receivingLocationId = receivingLocation.id;
 
-        const receivingWarehouse = await db.warehouse.findUnique({
-            where: { id: receivingWarehouseId }
-        });
-        if (!receivingWarehouse) {
-            return NextResponse.json({
-                message: `Receiving Warehouse ${receivingWarehouseId} not found`
-            }, { status: 404 });
-        }
+        await db.$transaction(async (tx) => {
+            // ✅ Check item stock at giving warehouse
+            const givingItemStock = await tx.itemStock.findFirst({
+                where: { itemId, locationId: givingLocationId }
+            });
 
-        // ✅ Check if giving warehouse has enough stock
-        if (givingWarehouse.stockQty < qty) {
-            return NextResponse.json({
-                message: `Giving Warehouse has only ${givingWarehouse.stockQty} in stock, cannot transfer ${qty}`
-            }, { status: 409 });
-        }
+            if (!givingItemStock || givingItemStock.quantity < qty) {
+                throw new Error(`Insufficient item stock at giving warehouse for item ${itemId}`);
+            }
 
-        // ✅ Perform all operations in a single transaction
-        const [transferAdjustment, updatedGiving, updatedReceiving] = await db.$transaction([
-            db.transferStockAdjustment.create({
+            // ✅ Create transfer record
+            await tx.transferStockAdjustment.create({
                 data: {
                     transferStockQty: qty,
                     itemId,
@@ -63,41 +73,59 @@ export async function POST(request) {
                     receivingWarehouseId,
                     notes
                 }
-            }),
-            db.warehouse.update({
-                where: { id: givingWarehouseId },
-                data: {
-                    stockQty: {
-                        decrement: qty
-                    }
-                }
-            }),
-            db.warehouse.update({
-                where: { id: receivingWarehouseId },
-                data: {
-                    stockQty: {
-                        increment: qty
-                    }
-                }
-            }),
-        ]);
+            });
 
-        return NextResponse.json({
-            transferAdjustment,
-            updatedGiving,
-            updatedReceiving
+            // ✅ Update warehouse overall stockQty
+            await Promise.all([
+                tx.warehouse.update({
+                    where: { id: givingWarehouseId },
+                    data: { stockQty: { decrement: qty } }
+                }),
+                tx.warehouse.update({
+                    where: { id: receivingWarehouseId },
+                    data: { stockQty: { increment: qty } }
+                })
+            ]);
+
+            // ✅ Update ItemStock at giving warehouse
+            await tx.itemStock.update({
+                where: { id: givingItemStock.id },
+                data: { quantity: { decrement: qty } }
+            });
+
+            // ✅ Update or create ItemStock at receiving warehouse
+            const receivingItemStock = await tx.itemStock.findFirst({
+                where: { itemId, locationId: receivingLocationId }
+            });
+
+            if (receivingItemStock) {
+                await tx.itemStock.update({
+                    where: { id: receivingItemStock.id },
+                    data: { quantity: { increment: qty } }
+                });
+            } else {
+                await tx.itemStock.create({
+                    data: {
+                        itemId,
+                        locationId: receivingLocationId,
+                        quantity: qty,
+                        reorderPoint: 0
+                    }
+                });
+            }
         });
+
+        return NextResponse.json({ message: "Stock transferred successfully." });
 
     } catch (error) {
-        console.error(error);
+        console.error("Transfer error:", error);
         return NextResponse.json({
-            error: error.message || error,
+            error: error.message || String(error),
             message: "Failed to create the Transfer Adjustment"
-        }, {
-            status: 500
-        });
+        }, { status: 500 });
     }
 }
+
 
 
 export async function GET(request) {

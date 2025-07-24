@@ -98,6 +98,8 @@ Name: Sushma Yadav
 - GitHub: https://github.com/yadavsushma999
 - Email: yadavsushma313@gmail.com
 
+Dekete folw -> Item Stock ->Location -> Item.
+create Item -> qty(50)->itemstock->(50)
 
 
 

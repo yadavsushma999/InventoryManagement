@@ -11,12 +11,13 @@ import { useRouter } from 'next/navigation'
 import { title } from 'process'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Swal from 'sweetalert2'
 
 
 export default function WarehouseForm({ initialData = {}, isUpdate = false }) {
     const router = useRouter();
-        const redirectTo = "/dashboard/inventory/warehouse";
-        const redirectCallback = () => router.replace(redirectTo);
+    const redirectTo = "/dashboard/inventory/warehouse";
+    const redirectCallback = () => router.replace(redirectTo);
     const selectOptions = [
         {
             title: "🔵 Main",
@@ -49,16 +50,55 @@ export default function WarehouseForm({ initialData = {}, isUpdate = false }) {
                 redirectCallback
             )
         } else {
-            makeApiRequest(setLoading,
-                "/api/warehouse",
-                "POST",
-                data,
-                "New Warehouse Created Successfully",
-                reset
-            )
+            // ✅ CREATE
+            setLoading(true);
+            const res = await fetch("/api/warehouse", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (res.ok) {
+                // Success: normal creation
+                reset();
+                router.replace(redirectTo);
+            } else if (res.status === 409) {
+                // Conflict: inactive exists
+                const resData = await res.json();
+                const confirm = await Swal.fire({
+                    title: "Warehouse exists but inactive",
+                    text: "Do you want to reactivate it instead?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, reactivate",
+                });
+
+                if (confirm.isConfirmed) {
+                    const reactivateRes = await fetch("/api/warehouse", {
+                        method: "PATCH",
+                        body: JSON.stringify({ id: resData.existingId }),
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    if (reactivateRes.ok) {
+                        reset();
+                        router.replace(redirectTo);
+                    } else {
+                        Swal.fire("Error", "Failed to reactivate.", "error");
+                    }
+                }
+            } else {
+                const errData = await res.json();
+                Swal.fire("Error", errData.message || "Failed to create role", "error");
+            }
+
+            setLoading(false);
         }
     }
-
     return (
         <div>
             {/**Head<Fer */}

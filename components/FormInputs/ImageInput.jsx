@@ -1,58 +1,69 @@
-import { UploadDropzone } from '@/lib/uploadthing';
-import { Pencil } from 'lucide-react';
-import Image from 'next/image';
-import React from 'react'
+"use client";
+
+import { UploadDropzone } from "@/lib/uploadthing";
+import { Pencil } from "lucide-react";
+import Image from "next/image";
+import React from "react";
 
 export default function ImageInput({
     label,
-    imageUrl = "",
+    imageUrl = [],
     setImageUrl,
     endpoint = "imageUploader",
     className = "col-span-full",
 }) {
+    // Ensure imageUrl is always an array
+    const imageList = Array.isArray(imageUrl) ? imageUrl : [imageUrl];
+
     return (
         <div className={className}>
             <div className="flex justify-between items-center mb-4">
                 <label
-                    htmlFor="course-image"
+                    htmlFor="upload-images"
                     className="block text-sm font-medium leading-6 text-gray-900"
                 >
                     {label}
                 </label>
-                {imageUrl && (
+
+                {imageList.length > 0 && (
                     <button
-                        onClick={() => setImageUrl("")}
+                        onClick={() => setImageUrl([])}
                         type="button"
-                        className="flex space-x-2  bg-slate-900 rounded-md shadow text-slate-50  py-2 px-4"
+                        className="flex space-x-2 bg-slate-900 rounded-md shadow text-white py-2 px-4"
                     >
                         <Pencil className="w-5 h-5" />
-                        <span>Change Image</span>
+                        <span>Change Images</span>
                     </button>
                 )}
             </div>
-            {imageUrl ? (
-                <Image
-                    src={imageUrl}
-                    alt="Item image"
-                    width={1000}
-                    height={667}
-                    className="w-full h-64 object-cover"
-                />
+
+            {imageList.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {imageList.map((url, index) => (
+                        <Image
+                            key={index}
+                            src={url}
+                            alt={`Uploaded image ${index + 1}`}
+                            width={500}
+                            height={333}
+                            className="w-full h-48 object-cover rounded-lg"
+                        />
+                    ))}
+                </div>
             ) : (
                 <UploadDropzone
                     endpoint={endpoint}
+                    //multiple={true}
                     onClientUploadComplete={(res) => {
-                        setImageUrl(res[0].appUrl);
-                        // Do something with the response
-                        console.log("Files: ", res[0].appUrl);
-                        console.log("Upload Completed");
+                        const urls = res.map((file) => file.appUrl);
+                        setImageUrl(urls); // Or append: prev => [...prev, ...urls]
+                        console.log("Files uploaded:", urls);
                     }}
                     onUploadError={(error) => {
-                        // Do something with the error.
-                        console.log(`ERROR! ${error.message}`);
+                        console.error("Upload error:", error.message);
                     }}
                 />
             )}
         </div>
-    )
+    );
 }

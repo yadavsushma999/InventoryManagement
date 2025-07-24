@@ -7,17 +7,44 @@ import React from 'react'
 export const dynamic = "force-dynamic";
 
 export default async function Brands() {
-    const brands = await getData("brands") || []; // fallback to empty array
-    const columns = ["title", "createdAt", "updatedAt"];
-    const activeBrands = Array.isArray(brands)
-        ? brands.filter(brand => brand?.isActive !== false)
-        : [];
+    const brands = await getData("brands") || [];
+    const columns = [
+        {
+            header: "🏷️ Title",
+            fields: [
+                { key: "title", style: "primary" },
+
+            ],
+        },
+        {
+            header: "✅ Status",
+            fields: [
+                { key: "isActive", label: "🟢 Active", style: "primary" },
+            ],
+        },
+        {
+            header: "⏱ Timestamps",
+            fields: [
+                { key: "createdAt", label: "📅 CreatedAt: ", style: "secondary" },
+                { key: "updatedAt", label: "🔄 UpdatedAt: ", style: "secondary" },
+            ],
+        },
+    ];
 
     return (
         <div>
-            <FixedHeader title="Brands" newLink="/dashboard/inventory/brands/new" />
+
             <div className="my-4 p-8">
-                <DataTable data={activeBrands} columns={columns} resourceTitle="brands" />
+                <DataTable
+                    data={brands}
+                    columns={columns}
+                    resourceTitle="brands"
+                    resourceLink="brands"
+                    module="inventory"
+                    enableDateFilter
+                    enableStatusFilter
+                />
+
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import { makeApiRequest } from '@/lib/apiRequest'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Swal from 'sweetalert2'
 
 export default function UnitForm({ initialData = {}, isUpdate = false }) {
     const router = useRouter();
@@ -34,17 +35,55 @@ export default function UnitForm({ initialData = {}, isUpdate = false }) {
             )
 
         } else {
-            setLoading(true)
-            makeApiRequest(setLoading,
-                "/api/units",
-                "POST",
-                data,
-                "New Unit Created Successfully",
-                reset
-            )
-
-        }
-    }
+                    // ✅ CREATE
+                    setLoading(true);
+                    const res = await fetch("/api/units", {
+                        method: "POST",
+                        body: JSON.stringify(data),
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+        
+                    if (res.ok) {
+                        // Success: normal creation
+                        reset();
+                        router.replace(redirectTo);
+                    } else if (res.status === 409) {
+                        // Conflict: inactive exists
+                        const resData = await res.json();
+                        const confirm = await Swal.fire({
+                            title: "Unit exists but inactive",
+                            text: "Do you want to reactivate it instead?",
+                            icon: "question",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes, reactivate",
+                        });
+        
+                        if (confirm.isConfirmed) {
+                            const reactivateRes = await fetch("/api/units", {
+                                method: "PATCH",
+                                body: JSON.stringify({ id: resData.existingId }),
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                            });
+        
+                            if (reactivateRes.ok) {
+                                reset();
+                                router.replace(redirectTo);
+                            } else {
+                                Swal.fire("Error", "Failed to reactivate.", "error");
+                            }
+                        }
+                    } else {
+                        const errData = await res.json();
+                        Swal.fire("Error", errData.message || "Failed to create role", "error");
+                    }
+        
+                    setLoading(false);
+                }
+            }
     return (
         <div>
             {/**Head<Fer */}

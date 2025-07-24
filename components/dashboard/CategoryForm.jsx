@@ -7,6 +7,7 @@ import { makeApiRequest } from '@/lib/apiRequest'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Swal from 'sweetalert2'
 
 export default function NewCategory({ initialData = {}, isUpdate = false }) {
 
@@ -37,13 +38,53 @@ export default function NewCategory({ initialData = {}, isUpdate = false }) {
                 redirectCallback
             )
         } else {
-            makeApiRequest(setLoading,
-                "/api/categories",
-                "POST",
-                data,
-                "New Category Created Successfully",
-                reset
-            )
+            // ✅ CREATE
+            setLoading(true);
+            const res = await fetch("/api/categories", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (res.ok) {
+                // Success: normal creation
+                reset();
+                router.replace(redirectTo);
+            } else if (res.status === 409) {
+                // Conflict: inactive exists
+                const resData = await res.json();
+                const confirm = await Swal.fire({
+                    title: "Category exists but inactive",
+                    text: "Do you want to reactivate it instead?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, reactivate",
+                });
+
+                if (confirm.isConfirmed) {
+                    const reactivateRes = await fetch("/api/categories", {
+                        method: "PATCH",
+                        body: JSON.stringify({ id: resData.existingId }),
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    if (reactivateRes.ok) {
+                        reset();
+                        router.replace(redirectTo);
+                    } else {
+                        Swal.fire("Error", "Failed to reactivate.", "error");
+                    }
+                }
+            } else {
+                const errData = await res.json();
+                Swal.fire("Error", errData.message || "Failed to create role", "error");
+            }
+
+            setLoading(false);
         }
     }
 
@@ -53,7 +94,7 @@ export default function NewCategory({ initialData = {}, isUpdate = false }) {
             <FormHeader title={isUpdate ? "Update Categories" : "New Categories"} href="/dashboard/inventory/categories" />
             {/**Form */}
             <div className="w-full max-w-4xl p-4 bg-white border border-gray-200 rounded-lg 
-      shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto my-3">
+        shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto my-3">
                 <form onSubmit={handleSubmit(onSubmit)} >
                     <div className='grid gap-4 sm:grid-cols-2 sm:gap-6'>
                         <TextInput

@@ -1,86 +1,134 @@
-import db from "@/lib/db";
 import { NextResponse } from "next/server";
+import db from "@/lib/db";
+import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authOptions";
+ // make sure this points to your NextAuth config
 
-export async function POST(request) {
+// ✅ CONFIG
+const MODEL = "brand";
+const UNIQUE_FIELD = "title";
+
+/**
+ * GET: List only active
+ */
+export async function GET() {
     try {
-        const { title } = await request.json();
-        const brand = await db.brand.create({
+        const items = await db[MODEL].findMany({
+            where: { isActive: true },
+        });
+        console.log("items",items);
+        return NextResponse.json(items);
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ message: "Failed to list" }, { status: 500 });
+    }
+}
+
+/**
+ * POST: Create or prompt to reactivate
+ */
+export async function POST(request) {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id || "unknown";
+
+    try {
+        const body = await request.json();
+        const { title } = body;
+
+        const result = await softCreate(MODEL, UNIQUE_FIELD, title, { title });
+
+        if (result.type === "exists") {
+            return NextResponse.json({ message: "Already exists" }, { status: 400 });
+        }
+
+        if (result.type === "inactive") {
+            return NextResponse.json(
+                { message: "Exists but inactive. Reactivate?", existingId: result.existingId },
+                { status: 409 }
+            );
+        }
+
+        // ✅ Audit log
+        await db.auditLog.create({
             data: {
-                title,  
+                action: "CREATE",
+                model: MODEL,
+                modelId: result.created.id,
+                userId: userId,
+                newValue: result.created,
             },
         });
-        return NextResponse.json(brand);
-    } catch (error) {
-        return NextResponse.json({
-            error,
-            message: "Failed to create the Brand"
-        }, {
-            status: 500
-        })
+
+        return NextResponse.json({ message: "Created", item: result.created });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ message: "Failed to create", error: err.message }, { status: 500 });
     }
 }
 
-export async function GET(request) {
-    try {
-        const brands = await db.brand.findMany({
-            orderBy: {
-                createdAt: 'desc' //Latest warehouse
-            }
-        })
-        return NextResponse.json(brands);
-    } catch (error) {
-        console.log(error)
-        return NextResponse.json({
-            error,
-            message: "Failed to fetch the Brands"
-        }, {
-            status: 500
-        })
-    }
-}
-
-
+/**
+ * DELETE: Soft delete by ID
+ */
 export async function DELETE(request) {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id || "unknown";
+
     try {
         const id = request.nextUrl.searchParams.get("id");
+        if (!id) return NextResponse.json({ message: "ID required" }, { status: 400 });
 
-        if (!id) {
-            return NextResponse.json({ message: "Brand ID is required" }, { status: 400 });
-        }
+        const beforeDelete = await db[MODEL].findUnique({ where: { id } });
+        const updated = await softDelete(MODEL, id);
 
-        try {
-            const deletedBrand = await db.brand.delete({
-                where: { id }
-            });
+        // ✅ Audit log
+        await db.auditLog.create({
+            data: {
+                action: "DELETE",
+                model: MODEL,
+                modelId: id,
+                userId: userId,
+                oldValue: beforeDelete,
+            },
+        });
 
-            return NextResponse.json({ message: "Brand hard deleted", item: deletedBrand });
-        } catch (error) {
-            if (error?.code === "P2014") {
-                console.warn("⚠️ Hard delete failed due to relation. Falling back to soft delete.");
+        return NextResponse.json({ message: "Soft deleted", item: updated });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ message: "Failed to delete", error: err.message }, { status: 500 });
+    }
+}
 
-                const softDeletedBrand = await db.brand.update({
-                    where: { id },
-                    data: {
-                        isActive: false,
-                        deletedAt: new Date()
-                    }
-                });
+/**
+ * PATCH: Reactivate by ID
+ */
+export async function PATCH(request) {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id || "unknown";
 
-                return NextResponse.json({
-                    message: "Brand soft deleted due to relation constraint",
-                    item: softDeletedBrand
-                });
-            }
+    try {
+        const body = await request.json();
+        const { id } = body;
+        if (!id) return NextResponse.json({ message: "ID required" }, { status: 400 });
 
-            throw error; 
-        }
-    } catch (error) {
-        return NextResponse.json({
-            message: "Failed to Delete",
-            error: {
-                code: error.code || "UNKNOWN",
-                message: error.message || String(error)
-            }
-        }, { status: 500 });
+        const beforeReactivate = await db[MODEL].findUnique({ where: { id } });
+        const updated = await softReactivate(MODEL, id);
+
+        // ✅ Audit log
+        await db.auditLog.create({
+            data: {
+                action: "REACTIVATE",
+                model: MODEL,
+                modelId: id,
+                userId: userId,
+                oldValue: beforeReactivate,
+                newValue: updated,
+            },
+        });
+
+        return NextResponse.json({ message: "Reactivated", item: updated });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ message: "Failed to reactivate", error: err.message }, { status: 500 });
     }
 }
