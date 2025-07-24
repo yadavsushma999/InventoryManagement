@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
+import { getFilters } from "@/lib/filters/getFilters";
  // make sure this points to your NextAuth config
 
 // ✅ CONFIG
@@ -12,18 +13,53 @@ const UNIQUE_FIELD = "title";
 /**
  * GET: List only active
  */
-export async function GET() {
+
+ // Ensure this helper is reusable
+
+export async function GET(request) {
+    const { take, skip, sortBy, sortOrder, search, status } = getFilters(request);
+
+    const where= {};
+
+    // Handle Active / Inactive / All filtering
+    if (status === "active") {
+        where.isActive = true;
+    } else if (status === "inactive") {
+        where.isActive = false;
+    }
+
+    if (search) {
+        where.title = { contains: search, mode: "insensitive" };
+    }
+
     try {
-        const items = await db[MODEL].findMany({
-            where: { isActive: true },
-        });
-        console.log("items",items);
-        return NextResponse.json(items);
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ message: "Failed to list" }, { status: 500 });
+        const [brands, totalCount] = await Promise.all([
+            db.brand.findMany({
+                where,
+                take,
+                skip,
+                orderBy: { [sortBy]: sortOrder },
+                select: {
+                    id: true,
+                    title: true,
+                    isActive: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            }),
+            db.brand.count({ where }),
+        ]);
+
+        return NextResponse.json({ items: brands, totalCount });
+    } catch (error) {
+        console.error("[GET /api/brands] Error:", error);
+        return NextResponse.json(
+            { message: "Failed to fetch brands", error: error.message },
+            { status: 500 }
+        );
     }
 }
+
 
 /**
  * POST: Create or prompt to reactivate
