@@ -8,7 +8,17 @@ import { makeApiRequest } from '@/lib/apiRequest'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-export default function AddInventoryForm({items,warehouses,suppliers}) {
+export default function AddInventoryForm({ items, warehouses }) {
+    const selectOptions = [
+        {
+            title: "➕ Add",
+            id: "add"
+        },
+        {
+            title: "➖ Remove",
+            id: "remove"
+        }
+    ]
     const {
         register,
         handleSubmit,
@@ -17,65 +27,81 @@ export default function AddInventoryForm({items,warehouses,suppliers}) {
     } = useForm();
 
     const [loading, setLoading] = useState(false);
+
     async function onSubmit(data) {
-        makeApiRequest(setLoading,
+        makeApiRequest(
+            setLoading,
             "/api/adjustments/add",
             "POST",
             data,
             "New Adjustment Added Successfully",
             reset
-        )
+        );
     }
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-4xl p-4 bg-white
-        border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800
-        dark:border-gray-700 mx-auto my-3'>
-            <div className='grid gap-4 sm:grid-cols-2 sm:gap-6'>
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-4xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto my-3"
+        >
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+
+                {/* Reference Number */}
                 <TextInput
                     label="Reference Number"
                     name="referenceNumber"
                     register={register}
                     errors={errors}
-                    className='w-full'
+
                 />
 
+                {/* Adjustment Type: Add / Remove */}
+                <SelectInput
+                    register={register}
+                    name="adjustmentType"
+                    label="Adjustment Type"
+                    className="w-full"
+                    options={selectOptions}
+                />
+
+                {/* Item */}
                 <SelectInput
                     register={register}
                     name="itemId"
-                    label="Select the Item"
-                    className='w-full'
-                    options={items} />
-                
-                <SelectInput
-                    register={register}
-                    name="supplierId"
-                    label="Select the Supplier"
-                    className='w-full'
-                    options={suppliers} />
-
-                <TextInput
-                    type='number'
-                    label="Enter Quantity of Stock to Add"
-                    name="addStockQty"
-                    register={register}
-                    errors={errors}
-                    className='w-full'
+                    label="Select Item"
+                    className="w-full"
+                    options={items}
                 />
 
+                {/* Quantity */}
+                <TextInput
+                    type="number"
+                    label="Quantity"
+                    name="quantity"
+                    register={register}
+                    errors={errors}
+                    className="w-full"
+                />
+
+                {/* Warehouse */}
                 <SelectInput
                     register={register}
-                    name="receivingWarehouseId"
-                    label="Select the Warehouse that will receive the Stock"
-                    className='w-full'
-                    options={warehouses} />
+                    name="warehouseId"
+                    label="Select Warehouse"
+                    className="w-full"
+                    options={warehouses}
+                />
 
+                {/* Notes */}
                 <TextareaInput
                     label="Adjustment Notes"
                     name="notes"
                     register={register}
-                    errors={errors} />
+                    errors={errors}
+                />
             </div>
+
             <SubmitButton isLoading={loading} title="Adjustment" />
         </form>
-    )
+    );
 }

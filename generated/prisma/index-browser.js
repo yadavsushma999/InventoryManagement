@@ -144,29 +144,29 @@ exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   isActive: 'isActive',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.UnitScalarFieldEnum = {
   id: 'id',
   title: 'title',
   abbreviation: 'abbreviation',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   isActive: 'isActive',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.BrandScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   isActive: 'isActive',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.WarehouseScalarFieldEnum = {
@@ -176,32 +176,8 @@ exports.Prisma.WarehouseScalarFieldEnum = {
   description: 'description',
   warehouseType: 'warehouseType',
   stockQty: 'stockQty',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   isActive: 'isActive',
-  deletedAt: 'deletedAt'
-};
-
-exports.Prisma.AddStockAdjustmentScalarFieldEnum = {
-  id: 'id',
-  referenceNumber: 'referenceNumber',
-  addStockQty: 'addStockQty',
-  notes: 'notes',
-  receivingWarehouseId: 'receivingWarehouseId',
-  itemId: 'itemId',
-  supplierId: 'supplierId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.TransferStockAdjustmentScalarFieldEnum = {
-  id: 'id',
-  referenceNumber: 'referenceNumber',
-  transferStockQty: 'transferStockQty',
-  notes: 'notes',
-  givingWarehouseId: 'givingWarehouseId',
-  receivingWarehouseId: 'receivingWarehouseId',
-  itemId: 'itemId',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -217,19 +193,96 @@ exports.Prisma.SupplierScalarFieldEnum = {
   paymentTerms: 'paymentTerms',
   taxID: 'taxID',
   notes: 'notes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   isActive: 'isActive',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AddStockAdjustmentScalarFieldEnum = {
+  id: 'id',
+  referenceNumber: 'referenceNumber',
+  addStockQty: 'addStockQty',
+  notes: 'notes',
+  receivingWarehouseId: 'receivingWarehouseId',
+  itemId: 'itemId',
+  adjustmentType: 'adjustmentType',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TransferStockAdjustmentScalarFieldEnum = {
+  id: 'id',
+  referenceNumber: 'referenceNumber',
+  transferStockQty: 'transferStockQty',
+  notes: 'notes',
+  givingWarehouseId: 'givingWarehouseId',
+  receivingWarehouseId: 'receivingWarehouseId',
+  itemId: 'itemId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  emailVerified: 'emailVerified',
-  image: 'image',
   hashedPassword: 'hashedPassword',
+  roleId: 'roleId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PermissionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RolePermissionScalarFieldEnum = {
+  id: 'id',
+  roleId: 'roleId',
+  permissionId: 'permissionId'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  model: 'model',
+  modelId: 'modelId',
+  userId: 'userId',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.LocationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  warehouseId: 'warehouseId'
+};
+
+exports.Prisma.ItemStockScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  locationId: 'locationId',
+  quantity: 'quantity',
+  reorderPoint: 'reorderPoint',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -251,10 +304,16 @@ exports.Prisma.ModelName = {
   Unit: 'Unit',
   Brand: 'Brand',
   Warehouse: 'Warehouse',
+  Supplier: 'Supplier',
   AddStockAdjustment: 'AddStockAdjustment',
   TransferStockAdjustment: 'TransferStockAdjustment',
-  Supplier: 'Supplier',
-  User: 'User'
+  User: 'User',
+  Role: 'Role',
+  Permission: 'Permission',
+  RolePermission: 'RolePermission',
+  AuditLog: 'AuditLog',
+  Location: 'Location',
+  ItemStock: 'ItemStock'
 };
 
 /**

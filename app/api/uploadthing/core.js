@@ -18,16 +18,12 @@ export const ourFileRouter = {
         },
     })
         // Set permissions and file types for this FileRoute
-       
+
         .onUploadComplete(async ({ metadata, file }) => {
-            // This code RUNS ON YOUR SERVER after upload
-        
+            console.log("✅ Uploaded file:", file.url);
+            return { uploadedUrl: file.url };
+        })
 
-            console.log("file url", file.ufsUrl,metadata);
-
-            // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-            return { uploadedBy: metadata.userId };
-        }),
 };
 
 

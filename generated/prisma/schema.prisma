@@ -18,24 +18,24 @@ model Item {
   id                      String                    @id @default(auto()) @map("_id") @db.ObjectId
   title                   String
   description             String?
-  category                Category                  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category                Category                  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId              String                    @db.ObjectId
   sku                     String                    @unique
   barcode                 String?
   quantity                Int
-  unit                    Unit                      @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unit                    Unit                      @relation(fields: [unitId], references: [id], onDelete: Restrict)
   unitId                  String                    @db.ObjectId
-  brand                   Brand                     @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brand                   Brand                     @relation(fields: [brandId], references: [id], onDelete: Restrict)
   brandId                 String                    @db.ObjectId
-  warehouse               Warehouse                 @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  warehouse               Warehouse                 @relation(fields: [warehouseId], references: [id], onDelete: Restrict)
   warehouseId             String                    @db.ObjectId
   sellingPrice            Float
   buyingPrice             Float
-  supplier                Supplier                  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplier                Supplier                  @relation(fields: [supplierId], references: [id], onDelete: Restrict)
   supplierId              String                    @db.ObjectId
   reOrderPoint            Int
   location                String?
-  imageUrl                String
+  imageUrl                String[]
   weight                  Float?
   dimensions              String?
   taxRate                 Float
@@ -46,52 +46,76 @@ model Item {
   TransferStockAdjustment TransferStockAdjustment[]
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
+  stock                   ItemStock[]
 }
 
 model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
+  title       String    @unique
   description String?
   Item        Item[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
   isActive    Boolean   @default(true)
   deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Unit {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
+  title        String    @unique
   abbreviation String
   Item         Item[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
   isActive     Boolean   @default(true)
   deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Brand {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
+  title     String    @unique
   Item      Item[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
   isActive  Boolean   @default(true)
   deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Warehouse {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  title         String     @unique
   location      String?
   description   String?
   warehouseType String
-  stockQty      Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  stockQty      Int        @default(0)
+  Item          Item[]
+  isActive      Boolean    @default(true)
+  deletedAt     DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  Location      Location[]
+
+  // ✅ Back relations for clarity and `include` support:
+  givingTransfers    TransferStockAdjustment[] @relation("GivingWarehouseTransfers")
+  receivingTransfers TransferStockAdjustment[] @relation("ReceivingWarehouseTransfers")
+}
+
+model Supplier {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String    @unique
+  phone         String?
+  email         String?
+  address       String?
+  contactPerson String?
+  supplierCode  String    @unique
+  paymentTerms  String?
+  taxID         String?
+  notes         String?
   Item          Item[]
   isActive      Boolean   @default(true)
   deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model AddStockAdjustment {
@@ -100,53 +124,107 @@ model AddStockAdjustment {
   addStockQty          Int
   notes                String?
   receivingWarehouseId String
-  item                 Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  item                 Item     @relation(fields: [itemId], references: [id], onDelete: Restrict)
   itemId               String   @db.ObjectId
-  supplier             Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  supplierId           String   @db.ObjectId
+  adjustmentType       String // "add" or "remove"
+  status               String   @default("active") // NEW: Optional if you want soft cancellation
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
 
 model TransferStockAdjustment {
-  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
-  referenceNumber      String
-  transferStockQty     Int
-  notes                String?
-  givingWarehouseId    String
-  receivingWarehouseId String
-  item                 Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId               String   @db.ObjectId
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-}
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  referenceNumber  String
+  transferStockQty Int
+  notes            String?
 
-model Supplier {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  title              String
-  phone              String?
-  email              String?
-  address            String?
-  contactPerson      String?
-  supplierCode       String               @unique
-  paymentTerms       String?
-  taxID              String?
-  notes              String?
-  Item               Item[]
-  AddStockAdjustment AddStockAdjustment[]
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  isActive           Boolean              @default(true)
-  deletedAt          DateTime?
+  givingWarehouseId String    @db.ObjectId
+  givingWarehouse   Warehouse @relation("GivingWarehouseTransfers", fields: [givingWarehouseId], references: [id])
+
+  receivingWarehouseId String    @db.ObjectId
+  receivingWarehouse   Warehouse @relation("ReceivingWarehouseTransfers", fields: [receivingWarehouseId], references: [id])
+
+  itemId String @db.ObjectId
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Restrict)
+
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
+  email          String?  @unique
   hashedPassword String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  roleId         String   @db.ObjectId
+  role           Role     @relation(fields: [roleId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Role {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String           @unique
+  description String? // ✅ add this!
+  isActive    Boolean          @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  users       User[] // ✅ if you link Role to User
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String           @unique
+  description String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model AuditLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  action    String // e.g. CREATE, UPDATE, DELETE, REACTIVATE
+  model     String // e.g. Role, Category, Permission
+  modelId   String // ID of the record affected
+  userId    String? // Who did it (optional)
+  oldValue  Json? // Before (optional)
+  newValue  Json? // After (optional)
+  createdAt DateTime @default(now())
+}
+
+model Location {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  type        String // "branch" or "warehouse"
+  warehouse   Warehouse   @relation(fields: [warehouseId], references: [id], onDelete: Restrict)
+  warehouseId String      @db.ObjectId
+  stock       ItemStock[]
+}
+
+model ItemStock {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  itemId       String @db.ObjectId
+  locationId   String @db.ObjectId
+  quantity     Int
+  reorderPoint Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  item     Item     @relation(fields: [itemId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
 }

@@ -1,22 +1,45 @@
-import DataTable from '@/components/dashboard/DataTable'
-import FixedHeader from '@/components/dashboard/FixedHeader'
-import { getData } from '@/lib/getData'
-import React from 'react'
-export const dynamic = "force-dynamic"
+import DataTable from "@/components/dashboard/DataTable";
+import FixedHeader from "@/components/dashboard/FixedHeader";
 
-export default async function Items() {
-    const items = await getData("items");
-    const columns = ["imageUrl","title","quantity","category.title","warehouse.title"]
-    const activeItems = items.filter(item => item.isActive !== false);
-    return (
-        <div>
-            {/**Head<Fer */}
-            <FixedHeader title="Items" newLink="/dashboard/inventory/items/new" />
-            {/**Form */}
-            <div className="my-4 p-8">
-                <DataTable data={activeItems} columns={columns} resourceTitle="items" />
-            </div>
-            {/** */}
-        </div>
-    )
+// Just define the columns — no fetching here.
+const columns = [
+  {
+    header: "🖼️ Image",
+    fields: [{ key: "imageUrl", label: "", style: "primary" }],
+  },
+  {
+    header: "🏷️ Title & Qty",
+    fields: [
+      { key: "title", label: "🏷️", style: "primary" },
+      { key: "quantity", label: "🔢", style: "secondary" },
+    ],
+  },
+  {
+    header: "🗂️ Category",
+    fields: [{ key: "category.title", label: "📂", style: "secondary" }],
+  },
+  {
+    header: "📦 Total Stock",
+    fields: [{ key: "quantity", label: "📦", style: "secondary" }],
+  },
+ 
+];
+
+export default function ItemsPage() {
+  return (
+    <div>
+      <FixedHeader title="Items" newLink="/dashboard/inventory/items/new" />
+      <div className="my-4 p-8">
+        <DataTable
+          module="inventory"
+          resourceTitle="Items"
+          resourceLink="items"
+          columns={columns}
+          itemsPerPage={6}
+          enableDateFilter
+          showView
+        />
+      </div>
+    </div>
+  );
 }

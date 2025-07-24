@@ -11,6 +11,10 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             href: "/dashboard/inventory"
         },
         {
+            title: "Bulk Actions",
+            href: "/dashboard/inventory/bulk"
+        },
+        {
             title: "Items",
             href: "/dashboard/inventory/items"
         },
@@ -38,6 +42,25 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             title: "Inventory Adjustments",
             href: "/dashboard/inventory/adjustments"
         }
+    ]
+
+    const settingLinks = [
+        {
+            title: "Roles",
+            href: "/dashboard/settings/roles"
+        },
+        {
+            title: "Add Permission",
+            href: "/dashboard/settings/permissions/add"
+        },
+        {
+            title: "Manage Permission",
+            href: "/dashboard/settings/permissions/manage"
+        },
+        {
+            title: "Reorder Manage",
+            href: "/dashboard/settings/reorder/manage"
+        },
     ]
 
     const salesLinks = [
@@ -108,24 +131,8 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
                     <SidebarDropdownLink
                         items={inventoryLinks}
                         title="Inventory"
-                        icon={BaggageClaim} 
-                        setShowSidebar = {setShowSidebar}/>
-
-                    <SidebarDropdownLink
-                        items={salesLinks}
-                        title="Sales"
-                        icon={ShoppingBasket} />
-
-                    <button className="flex items-center space-x-2 p-2">
-                        <ShoppingBag className='w-4 h-4' />
-                        <span>Purchases</span>
-                    </button>
-
-                    <Link className="flex items-center space-x-2 p-2"
-                        href="#">
-                        <Cable className='w-4 h-4' />
-                        <span>Integrations</span>
-                    </Link>
+                        icon={BaggageClaim}
+                        setShowSidebar={setShowSidebar} />
 
                     <Link className="flex items-center space-x-2 p-2"
                         href="#">
@@ -138,6 +145,10 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
                         <FilesIcon className='w-4 h-4' />
                         <span>Documents</span>
                     </Link>
+                    <SidebarDropdownLink
+                        items={settingLinks}
+                        title="Settings"
+                        icon={ShoppingBasket} />
                 </nav>
                 <SubscriptionCard />
             </div>
