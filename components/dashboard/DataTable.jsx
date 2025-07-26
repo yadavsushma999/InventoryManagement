@@ -22,10 +22,14 @@ export default function DataTable({
   itemsPerPage = 6,
 }) {
   const { first, last } = getYearDates();
+  const cleanedLink = (resourceLink || "").trim().replace(/\/$/, "");
+  const finalLink = cleanedLink.startsWith("adjustments/")
+    ? cleanedLink.replace(/\/(add|transfer)$/, "")
+    : cleanedLink;
 
-
+  const isHiddenLink = ["", "reorder", "adjustments/transfer"].includes(cleanedLink);
   const [data, setData] = useState(initialData);
-    console.log("DataTable",data);
+  console.log("DataTable", data);
   const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [loading, setLoading] = useState(false);
 
@@ -128,12 +132,15 @@ export default function DataTable({
         <div className="flex justify-between items-center border-b pb-2">
           <h1 className="text-xl font-bold capitalize">{resourceTitle} List</h1>
           <div className="flex gap-2">
-            <Link
-              href={`/dashboard/${module}/${resourceLink}/new`}
-              className="inline-flex items-center gap-1 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700"
-            >
-              <Plus className="w-4 h-4" /> New {resourceTitle}
-            </Link>
+
+            {!isHiddenLink && (
+              <Link
+                href={`/dashboard/${module}/${finalLink}/new`}
+                className="inline-flex items-center gap-1 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700"
+              >
+                <Plus className="w-4 h-4" /> New {resourceTitle}
+              </Link>
+            )}
             <button
               onClick={() => setShowFilter(!showFilter)}
               className="relative p-2 border rounded hover:bg-gray-100"
@@ -186,9 +193,8 @@ export default function DataTable({
       </div>
 
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l transform transition-transform duration-300 ${
-          showFilter ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l transform transition-transform duration-300 ${showFilter ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">

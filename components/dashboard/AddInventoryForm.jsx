@@ -70,7 +70,7 @@ export default function AddInventoryForm({ items, warehouses }) {
                     name="itemId"
                     label="Select Item"
                     className="w-full"
-                    options={items}
+                    options={Array.isArray(items?.items) ? items.items : []}
                 />
 
                 {/* Quantity */}
@@ -89,7 +89,7 @@ export default function AddInventoryForm({ items, warehouses }) {
                     name="warehouseId"
                     label="Select Warehouse"
                     className="w-full"
-                    options={warehouses}
+                    options={Array.isArray(warehouses?.items) ? warehouses.items : []}
                 />
 
                 {/* Notes */}

@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { getFilters } from "@/lib/filters/getFilters";
 
 // POST: Create Add/Remove Stock Adjustment
 export async function POST(request) {
@@ -170,20 +171,70 @@ export async function POST(request) {
 }
 
 // GET: List all adjustments
-export async function GET() {
+ // make sure this is defined
+
+export async function GET(request) {
+    const { take, skip, sortBy, sortOrder, search, status } = getFilters(request);
+
+    const where = {};
+
+    // Filter by status
+    if (status === "active") {
+        where.status = "active";
+    } else if (status === "cancelled") {
+        where.status = "cancelled";
+    }
+
+    // Apply text search to referenceNumber or notes
+    if (search) {
+        where.OR = [
+            { referenceNumber: { contains: search, mode: "insensitive" } },
+            { notes: { contains: search, mode: "insensitive" } },
+        ];
+    }
+
     try {
-        const items = await db.addStockAdjustment.findMany({
-            orderBy: { createdAt: "desc" },
-        });
-        return NextResponse.json(items);
+        const [items, totalCount] = await Promise.all([
+            db.addStockAdjustment.findMany({
+                where,
+                take,
+                skip,
+                orderBy: { [sortBy || "createdAt"]: sortOrder || "desc" },
+                select: {
+                    id: true,
+                    referenceNumber: true,
+                    addStockQty: true,
+                    notes: true,
+                    adjustmentType: true,
+                    status: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    itemId: true,
+                    receivingWarehouseId: true,
+                    item: {
+                        select: {
+                            id: true,
+                            title: true, // assuming item has a `title`
+                        },
+                    },
+                },
+            }),
+            db.addStockAdjustment.count({ where }),
+        ]);
+
+        return NextResponse.json({ items, totalCount });
     } catch (error) {
-        console.error(error);
+        console.error("[GET /api/add-stock-adjustments] Error:", error);
         return NextResponse.json(
-            { message: "Failed to fetch AddStockAdjustments.", error: error.message || String(error) },
+            {
+                message: "Failed to fetch AddStockAdjustments",
+                error: error.message || String(error),
+            },
             { status: 500 }
         );
     }
 }
+
 
 // DELETE: Hard/Soft delete adjustment
 export async function DELETE(request) {

@@ -5,22 +5,21 @@ import React from 'react'
 export const dynamic = "force-dynamic"
 
 export default async function Suppliers() {
-    const suppliers = await getData("suppliers");
-    //const columns = ["title/phone/email","address","supplierCode","taxID/paymentTerms","notes"]
+
     const columns = [
         {
             header: "📇 Supplier Info",
             fields: [
-                { key: "title",label:" " ,style: "primary" },
+                { key: "title", label: " ", style: "primary" },
+                { key: "supplierCode", label:"Supplier Code: ",style: "secondary" },
                 { key: "phone", label: "📞 ", style: "secondary" },
                 { key: "email", label: "📧 ", style: "secondary" },
             ],
         },
         {
-            header: "🏢 Company",
+            header: "🏢 Terms & Condition",
             fields: [
-                { key: "supplierCode", style: "primary" },
-                { key: "taxID", label: "💳 ", style: "secondary" },
+                { key: "taxID", label: "Tax Id: " , style: "secondary" },
                 { key: "paymentTerms", label: "💰 ", style: "secondary" },
             ],
         },
@@ -28,7 +27,7 @@ export default async function Suppliers() {
             header: "Notes",
             fields: [
                 { key: "notes", style: "secondary" },
-               
+
             ],
         },
     ];
@@ -38,7 +37,7 @@ export default async function Suppliers() {
             {/**Header */}
             {/**Form */}
             <div className="my-4 p-8">
-                <DataTable data={suppliers} columns={columns} resourceTitle="suppliers" resourceLink="suppliers" module="inventory" />
+                <DataTable columns={columns} resourceTitle="suppliers" resourceLink="suppliers" module="inventory" />
             </div>
             {/** */}
         </div>

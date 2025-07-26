@@ -51,7 +51,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
         },
         {
             title: "Add Permission",
-            href: "/dashboard/settings/permissions/add"
+            href: "/dashboard/settings/permissions/action"
         },
         {
             title: "Manage Permission",

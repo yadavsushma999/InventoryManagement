@@ -35,14 +35,14 @@ export default async function Permissions() {
 
     return (
         <div>
-            <FixedHeader title="Permissions" newLink="/dashboard/settings/permissions/add/new" />
+          
             <div className="my-4 p-8">
                 <DataTable
                     data={permissions}
                     columns={columns}
                     module="settings"
                     resourceTitle="permissions"
-                    resourceLink="permissions/add"
+                    resourceLink="permissions/action"
                     enableStatusFilter={false}  // disable status filter for permissions
                     enableDateFilter={true}
                 />

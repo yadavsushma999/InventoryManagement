@@ -21,7 +21,7 @@ export default function ListTable({
   showView = false,
   resourceLink = resourceTitle,
 }) {
-  console.log("data",data);
+  console.log("data", data);
   if (!data.length) {
     return (
       <div className="flex flex-col items-center justify-center p-10 text-center border rounded shadow bg-gray-50">
@@ -117,7 +117,7 @@ export default function ListTable({
                     module={module}
                     resourceTitle={resourceTitle}
                     showView={showView}
-                    resourceLink = {resourceLink}
+                    resourceLink={resourceLink}
 
                   />
                 ))}
@@ -224,6 +224,8 @@ function Row({
               );
             }
 
+            if (!val) return null;
+
             return (
               <div
                 key={fieldObj.key}
@@ -236,6 +238,7 @@ function Row({
                 {label} {val}
               </div>
             );
+
           })}
         </td>
       ))}

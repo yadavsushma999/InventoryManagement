@@ -34,9 +34,8 @@ export default async function Roles() {
 
     return (
         <div>
-            <FixedHeader title="Roles" newLink="/dashboard/settings/roles/new" />
             <div className="my-4 p-8">
-                <DataTable data={roles} columns={columns} module="settings" resourceTitle="roles" />
+                <DataTable data={roles} columns={columns} module="settings" resourceTitle="roles" resourceLink="roles" />
             </div>
         </div>
     );

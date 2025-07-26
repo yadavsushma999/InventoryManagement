@@ -11,7 +11,7 @@ import FormHeader from "@/components/dashboard/FormHeader";
 
 export default function CreatePermissionForm({ initialData = {}, isUpdate = false }) {
     const router = useRouter();
-    const redirectTo = "/dashboard/settings/permissions/add";
+    const redirectTo = "/dashboard/settings/permissions/action";
     const redirectCallback = () => router.replace(redirectTo);
 
     const {
@@ -61,6 +61,7 @@ export default function CreatePermissionForm({ initialData = {}, isUpdate = fals
                     register={register}
                     errors={errors}
                     className="w-full"
+                    placeholder = "e.g: Item Create"
                 />
 
                 <TextareaInput
