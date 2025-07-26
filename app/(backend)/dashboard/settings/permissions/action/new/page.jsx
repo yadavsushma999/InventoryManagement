@@ -24,7 +24,6 @@ export default function CreatePermissionForm({ initialData = {}, isUpdate = fals
     const [loading, setLoading] = useState(false);
 
     async function onSubmit(data) {
-        console.log("data",data);
         if (isUpdate) {
             await makeApiRequest(
                 setLoading,

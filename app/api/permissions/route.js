@@ -7,7 +7,6 @@ export async function GET() {
         const permissions = await db.permission.findMany({
             //orderBy: { createdAt: "desc" }, // ✅ optional: only if you have createdAt
         });
-        console.log("permissions",permissions);
         return NextResponse.json(permissions);
     } catch (error) {
         console.error(error);
@@ -44,7 +43,6 @@ export async function POST(request) {
 
 
 export async function DELETE(request) {
-    console.log("request",request);
     try {
         const id = request.nextUrl.searchParams.get("id");
 
