@@ -13,16 +13,6 @@ export default async function NewItem({ initialData = {}, isUpdate = false }) {
     getData('warehouse'),
     getData('suppliers'),
   ]);
-
-  console.log({
-    categories,
-    units,
-    brands,
-    warehouses,
-    suppliers,
-  });
-
-
   return (
     <div>
       <FormHeader

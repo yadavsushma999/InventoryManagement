@@ -17,7 +17,6 @@ export async function GET() {
     }
 }
 
-
 // POST: Create a new  permission
 export async function POST(request) {
     try {
