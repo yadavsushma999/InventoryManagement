@@ -44,7 +44,7 @@ export default function TransformInventoryForm({items,warehouses}) {
                     name="itemId"
                     label="Select the Item"
                     className='w-full'
-                    options={items} />
+                    options={Array.isArray(items?.items) ? items.items : []} />
 
                 <TextInput
                     type='number'
@@ -60,14 +60,14 @@ export default function TransformInventoryForm({items,warehouses}) {
                     name="givingWarehouseId"
                     label="Select the Warehouse that will give the Stock"
                     className='w-full'
-                    options={warehouses} />
+                    options={Array.isArray(warehouses?.items) ? warehouses.items : []} />
 
                 <SelectInput
                     register={register}
                     name="receivingWarehouseId"
                     label="Select the Warehouse that will receive the Stock"
                     className='w-full'
-                    options={warehouses} />
+                    options={Array.isArray(warehouses?.items) ? warehouses.items : []} />
 
                 <TextareaInput
                     label="Adjustment Notes"

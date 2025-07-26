@@ -66,7 +66,7 @@ export default async function Adjustments() {
           columns={addColumns}
           module="inventory"
           resourceTitle="Adjustment Add"
-          resourceLink="adjustments" />
+          resourceLink="adjustments/add" />
       </div>
       <div className="my-4 p-8">
         <DataTable
@@ -74,7 +74,7 @@ export default async function Adjustments() {
           columns={transferColumns}
           module="inventory"
           resourceTitle="Adjustment Transfer"
-          resourceLink="adjustments" />
+          resourceLink="adjustments/transfer" />
       </div>
       {/** */}
     </div>
