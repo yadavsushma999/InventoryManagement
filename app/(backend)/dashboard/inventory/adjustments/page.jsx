@@ -1,15 +1,10 @@
 
 import DataTable from '@/components/dashboard/DataTable'
-import FixedHeader from '@/components/dashboard/FixedHeader'
-import { getData } from '@/lib/getData'
 import React from 'react'
 
 export default async function Adjustments() {
-  const addAdjustmentsData = getData("adjustments/add");
-  const transferAdjustmentsData = getData("adjustments/transfer");
-  const [addAdjustments, transferAdjustments] = await Promise.all([addAdjustmentsData, transferAdjustmentsData])
-  // const addColumns = ["referenceNumber", "addStockQty","createdAt"];
-  // const transferColumns = ["referenceNumber", "transferStockQty","createdAt"];
+
+  
   const addColumns = [
     {
       header: "🏷️ Ref No.",
@@ -62,7 +57,6 @@ export default async function Adjustments() {
       {/**Form */}
       <div className="my-4 p-8">
         <DataTable
-          data={addAdjustments}
           columns={addColumns}
           module="inventory"
           resourceTitle="Adjustment Add"
@@ -70,7 +64,6 @@ export default async function Adjustments() {
       </div>
       <div className="my-4 p-8">
         <DataTable
-          data={transferAdjustments}
           columns={transferColumns}
           module="inventory"
           resourceTitle="Adjustment Transfer"

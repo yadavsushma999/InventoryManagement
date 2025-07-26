@@ -1,11 +1,7 @@
 import DataTable from '@/components/dashboard/DataTable'
-import FixedHeader from '@/components/dashboard/FixedHeader'
-import { getData } from '@/lib/getData'
 import React from 'react'
-export const dynamic = "force-dynamic"
 
 export default async function Categories() {
-  const categories = await getData("categories");
   //const columns =["title/description","isActive","createdAt/updatedAt"]
    const columns = [
         {
@@ -38,7 +34,7 @@ export default async function Categories() {
 
       {/**Form */}
       <div className="my-4 p-8">
-        <DataTable data={categories} columns={columns} resourceTitle="categories" module="inventory" resourceLink="categories" />
+        <DataTable columns={columns} resourceTitle="categories" module="inventory" resourceLink="categories" />
       </div>
       {/** */}
     </div>
