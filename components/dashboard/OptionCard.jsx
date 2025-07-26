@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react'
 
 export default function OptionCard({ optionData }) {
-    const { title, description, link, linkTitle, enabled, icon: Icon } = optionData;
+    const { title, description, linkName, linkTitle, enabled, icon: Icon } = optionData;
     return (
         
             <div className='shadow-md bg-white flex flex-col items-center justify-center gap-4 p-6 rounded'>
@@ -14,7 +14,7 @@ export default function OptionCard({ optionData }) {
                     {description}
                 </p>
                 {enabled ? (
-                    <Link href={link} className='w-full sm:w-auto py-2 bg-blue-600 rounded px-3 
+                    <Link href={linkName} className='w-full sm:w-auto py-2 bg-blue-600 rounded px-3 
             inline-flex items-center justify-center sm:justify-start space-x-2 text-white'>
                         {linkTitle}
                     </Link>
