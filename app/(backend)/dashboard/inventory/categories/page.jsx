@@ -35,7 +35,7 @@ export default async function Categories() {
   return (
     <div>
       {/**Head<Fer */}
-      <FixedHeader title="Categories" newLink="/dashboard/inventory/categories/new" />
+
       {/**Form */}
       <div className="my-4 p-8">
         <DataTable data={categories} columns={columns} resourceTitle="categories" module="inventory" resourceLink="categories" />

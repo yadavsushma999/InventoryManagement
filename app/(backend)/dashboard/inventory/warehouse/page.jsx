@@ -44,7 +44,6 @@ export default async function Warehouse() {
     return (
         <div>
             {/**Head<Fer */}
-            <FixedHeader title="Warehouses" newLink="/dashboard/inventory/warehouse/new" />
             {/**Form */}
             <div className="my-4 p-8">
                 <DataTable
