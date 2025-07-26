@@ -59,25 +59,22 @@ export default async function Adjustments() {
   return (
     <div>
       {/**Head<Fer */}
-      <FixedHeader title="Adjustments" newLink="/dashboard/inventory/adjustments/new" />
       {/**Form */}
       <div className="my-4 p-8">
-        <h2 className='py-4 text-xl font-semibold'> Stock Increment Adjustments</h2>
         <DataTable
           data={addAdjustments}
           columns={addColumns}
           module="inventory"
           resourceTitle="Adjustment Add"
-          resourceLink="adjustments/add" />
+          resourceLink="adjustments" />
       </div>
       <div className="my-4 p-8">
-        <h2 className='py-4 text-xl font-semibold'> Stock Transfer Adjustments</h2>
         <DataTable
           data={transferAdjustments}
           columns={transferColumns}
           module="inventory"
           resourceTitle="Adjustment Transfer"
-          resourceLink="adjustments/transfer" />
+          resourceLink="adjustments" />
       </div>
       {/** */}
     </div>

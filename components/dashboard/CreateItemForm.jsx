@@ -21,6 +21,8 @@ export default function CreateItemForm({
     initialData = {},
     isUpdate = false,
 }) {
+    console.log("Brands",brands,)
+    console.log("Warehouse",warehouses);
     const [imageUrl, setImageUrl] = useState(initialData.imageUrl ?? []);
     const [loading, setLoading] = useState(false);
     const imageInputRef = useRef(null);
@@ -123,7 +125,7 @@ export default function CreateItemForm({
                     <TextInput label="Item Quantity" name="quantity" register={register} errors={errors} className="w-full" />
                     <SelectInput label="Select the Item Unit" name="unitId" register={register} options={units} className="w-full" />
 
-                    <SelectInput label="Select the Item Brand" name="brandId" register={register} options={brands} className="w-full" />
+                    <SelectInput label="Select the Item Brand" name="brandId" register={register}  options={Array.isArray(brands?.items) ? brands.items : []} className="w-full" />
                     <TextInput label="Buying Price" name="buyingPrice" type="number" register={register} errors={errors} className="w-full" />
                     <TextInput label="Selling Price" name="sellingPrice" type="number" register={register} errors={errors} className="w-full" />
 

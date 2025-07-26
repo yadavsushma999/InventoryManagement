@@ -28,7 +28,6 @@ const columns = [
 export default function ItemsPage() {
   return (
     <div>
-      <FixedHeader title="Items" newLink="/dashboard/inventory/items/new" />
       <div className="my-4 p-8">
         <DataTable
           module="inventory"

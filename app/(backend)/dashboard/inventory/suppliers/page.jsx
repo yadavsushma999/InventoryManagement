@@ -36,10 +36,9 @@ export default async function Suppliers() {
     return (
         <div>
             {/**Header */}
-            <FixedHeader title="Suppliers" newLink="/dashboard/inventory/suppliers/new" />
             {/**Form */}
             <div className="my-4 p-8">
-                <DataTable data={suppliers} columns={columns} resourceTitle="suppliers"  resourceLink="suppliers" module="inventory" />
+                <DataTable data={suppliers} columns={columns} resourceTitle="suppliers" resourceLink="suppliers" module="inventory" />
             </div>
             {/** */}
         </div>

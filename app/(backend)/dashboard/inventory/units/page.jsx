@@ -34,7 +34,6 @@ export default async function Units() {
     return (
         <div>
             {/**Head<Fer */}
-            <FixedHeader title="Units" newLink="/dashboard/inventory/units/new" />
             {/**Form */}
             <div className="my-4 p-8">
                 <DataTable data={units} columns={columns} resourceTitle="units" resourceLink="units" module="inventory"/>
