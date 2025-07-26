@@ -1,5 +1,4 @@
 import DataTable from "@/components/dashboard/DataTable";
-import FixedHeader from "@/components/dashboard/FixedHeader";
 
 // Just define the columns — no fetching here.
 const columns = [
