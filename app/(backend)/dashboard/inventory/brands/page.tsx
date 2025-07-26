@@ -1,12 +1,7 @@
 import DataTable from '@/components/dashboard/DataTable'
-import { getData } from '@/lib/getData'
-import React from 'react'
 
-// ✅ Tell Next.js this page must be dynamic (always server-rendered)
-export const dynamic = "force-dynamic";
 
 export default async function Brands() {
-    const brands = await getData("brands") || [];
     const columns = [
         {
             header: "🏷️ Title",
