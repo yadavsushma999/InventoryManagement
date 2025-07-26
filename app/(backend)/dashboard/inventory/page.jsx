@@ -12,7 +12,7 @@ export default function Inventory() {
     {
       title: "Items",
       description: "Create standalone items and services that you buy and sell",
-      link: "/dashboard/inventory/items/new",
+      linkName: "/dashboard/inventory/items/new",
       linkTitle: "New Item",
       enabled: true,
       icon: LayoutGrid
@@ -20,7 +20,7 @@ export default function Inventory() {
     {
       title: "Categories Items",
       description: "Bundle different items together and sell tem as kits",
-      link: "/dashboard/inventory/categories/new",
+      linkName: "/dashboard/inventory/categories/new",
       linkTitle: "New Category",
       enabled: true,
       icon: LayoutPanelTop
@@ -28,7 +28,7 @@ export default function Inventory() {
     {
       title: "Brands",
       description: "Tweak your item prices for specific contacts or transactions",
-      link: "/dashboard/inventory/brands/new",
+      linkName: "/dashboard/inventory/brands/new",
       linkTitle: "New Brands",
       enabled: true,
       icon: Slack
@@ -36,7 +36,7 @@ export default function Inventory() {
     {
       title: "Warehouse",
       description: "Tweak your item prices for specific contacts or transactions",
-      link: "/dashboard/inventory/warehouse/new",
+      linkName: "/dashboard/inventory/warehouse/new",
       linkTitle: "New Warehouse",
       enabled: true,
       icon: Warehouse
@@ -44,7 +44,7 @@ export default function Inventory() {
     {
       title: "Units",
       description: "Tweak your item prices for specific contacts or transactions",
-      link: "/dashboard/inventory/units/new",
+      linkName: "/dashboard/inventory/units/new",
       linkTitle: "New Unit",
       enabled: true,
       icon: Scale
@@ -52,7 +52,7 @@ export default function Inventory() {
     {
       title: "Suppliers",
       description: "Tweak your item prices for specific contacts or transactions",
-      link: "/dashboard/inventory/suppliers/new",
+      linkName: "/dashboard/inventory/suppliers/new",
       linkTitle: "New Supplier",
       enabled: true,
       icon: Factory
@@ -60,7 +60,7 @@ export default function Inventory() {
     {
       title: "Inventory Adjustment",
       description: "Transfer Stock from the Main Warehouse",
-      link: "/dashboard/inventory/adjustments/new",
+      linkName: "/dashboard/inventory/adjustments/new",
       linkTitle: "New Adjustment",
       enabled: true,
       icon: Diff
@@ -69,7 +69,6 @@ export default function Inventory() {
   ]
   return (
     <div>
-      <FixedHeader newLink="/dashboard/inventory/items/new" />
       <div className="grid grid-col-1 lg:grid-cols-3 md:grid-cols-2 py-8 px-16 gap-6">
         {optionCards.map((card, i) => {
           return (
