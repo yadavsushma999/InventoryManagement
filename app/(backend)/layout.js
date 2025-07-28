@@ -4,15 +4,17 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { EdgeStoreProvider } from "@/lib/edgestore"; // ✅ Make sure the path is correct
-
 import Header from "@/components/dashboard/Header.jsx";
 import Sidebar from "@/components/dashboard/Sidebar.jsx";
 import Loader from "@/components/dashboard/Loader";
+import "../globals.css";
 
 export default function Layout({ children }) {
   const [showSidebar, setShowSidebar] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  console.log("Sidebare visible?", showSidebar, setShowSidebar);
+
 
   // Redirect unauthenticated users
   useEffect(() => {
@@ -28,12 +30,18 @@ export default function Layout({ children }) {
     <EdgeStoreProvider>
       <div className="flex w-full min-h-screen">
         {/* Sidebar */}
-        <div className="bg-slate-900 text-slate-50">
+        {/* Sidebar */}
+        <aside>
           <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-        </div>
+        </aside>
+
 
         {/* Main content */}
-        <main className="ml-0 lg:ml-60 flex-1 bg-slate-100 relative overflow-x-hidden px-4 md:px-8 py-4">
+        <main
+          className={`bg-gray-100 transition-all duration-300 lg:ml-5 px-4 md:px-8 py-4 flex-1 relative overflow-x-hidden
+    ${showSidebar ? "ml-20 sm:ml-20" : "ml-0"}
+  `}
+        >
           <Header setShowSidebar={setShowSidebar} showSidebar={showSidebar} />
 
           {/* Conditional rendering */}
@@ -42,6 +50,6 @@ export default function Layout({ children }) {
           {!isLoading && !isRedirecting && children}
         </main>
       </div>
-    </EdgeStoreProvider>
+    </EdgeStoreProvider >
   );
 }

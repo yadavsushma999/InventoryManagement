@@ -28,6 +28,8 @@ import Loader from './Loader';
 export default function Header({ setShowSidebar }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  console.log("Sidebar visible?", setShowSidebar);
+
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -36,7 +38,7 @@ export default function Header({ setShowSidebar }) {
   }, [status, router]);
 
   if (status === 'loading') {
-    return ;
+    return;
   }
 
   if (status === 'unauthenticated') {
@@ -50,9 +52,10 @@ export default function Header({ setShowSidebar }) {
     <div className="bg-gray-100 border-b border-slate-200 px-4 md:px-8 py-2 flex items-center justify-between flex-wrap gap-3">
       {/* Mobile Menu & Search */}
       <div className="flex items-center gap-3 flex-1 md:flex-none">
-        <button className="block lg:hidden" onClick={() => setShowSidebar(true)}>
+        <button className="block lg:hidden" onClick={() => setShowSidebar(prev => !prev)}>
           <AlignJustify className="w-6 h-6" />
         </button>
+
         <button className="hidden sm:block">
           <History className="w-6 h-6" />
         </button>
