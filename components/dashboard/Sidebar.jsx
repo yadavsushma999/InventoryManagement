@@ -1,162 +1,232 @@
-import { BaggageClaim, BarChart4, Cable, ChevronLeft, FilesIcon, Home, PlusCircle, ShoppingBag, ShoppingBasket, ShoppingCart, X } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
-import SubscriptionCard from './SubscriptionCard'
-import SidebarDropdownLink from './SidebarDropdownLink'
+"use client";
+
+import {
+    Home,
+    Boxes,
+    FileText,
+    BarChart2,
+    Settings,
+    LogOut,
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    ChevronUp,
+    Package,
+    Users,
+    Warehouse,
+    UserCog,
+    ShieldCheck,
+    PlusCircle,
+    ListChecks,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+
+const NavItem = ({ href, icon: Icon, title, isActive, collapsed }) => (
+    <Link
+        href={href}
+        className={`flex items-center gap-3 px-4 py-2 rounded-md transition-all text-sm font-medium
+      ${isActive ? "bg-blue-900 text-white" : "text-slate-300 hover:bg-slate-700 hover:text-white"}
+      ${collapsed ? "justify-center" : ""}
+    `}
+    >
+        <Icon size={20} />
+        {!collapsed && <span>{title}</span>}
+    </Link>
+);
 
 export default function Sidebar({ showSidebar, setShowSidebar }) {
+    const pathname = usePathname();
+    const [collapsed, setCollapsed] = useState(false);
+    const [openDropdowns, setOpenDropdowns] = useState({
+        inventory: false,
+        settings: false,
+    });
+
+    const toggleDropdown = (menu) => {
+        setOpenDropdowns((prev) => {
+            const newState = Object.fromEntries(
+                Object.keys(prev).map((key) => [key, key === menu ? !prev[key] : false])
+            );
+            return newState;
+        });
+    };
+
+    const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(min-width: 1024px)");
+        const updateScreen = () => setIsLargeScreen(mediaQuery.matches);
+        updateScreen();
+        mediaQuery.addEventListener("change", updateScreen);
+        return () => mediaQuery.removeEventListener("change", updateScreen);
+    }, []);
+
     const inventoryLinks = [
-        {
-            title: "All",
-            href: "/dashboard/inventory"
-        },
-        {
-            title: "Bulk Actions",
-            href: "/dashboard/inventory/bulk"
-        },
-        {
-            title: "Items",
-            href: "/dashboard/inventory/items"
-        },
-        {
-            title: "Categories",
-            href: "/dashboard/inventory/categories"
-        },
-        {
-            title: "Brands",
-            href: "/dashboard/inventory/brands"
-        },
-        {
-            title: "Units",
-            href: "/dashboard/inventory/units"
-        },
-        {
-            title: "Warehouse",
-            href: "/dashboard/inventory/warehouse"
-        },
-        {
-            title: "Suppliers",
-            href: "/dashboard/inventory/suppliers"
-        },
-        {
-            title: "Inventory Adjustments",
-            href: "/dashboard/inventory/adjustments"
-        }
-    ]
+        { title: "All", href: "/dashboard/inventory", icon: Boxes },
+        { title: "Bulk Actions", href: "/dashboard/inventory/bulk", icon: Package },
+        { title: "Items", href: "/dashboard/inventory/items", icon: Package },
+        { title: "Categories", href: "/dashboard/inventory/categories", icon: ListChecks },
+        { title: "Brands", href: "/dashboard/inventory/brands", icon: Boxes },
+        { title: "Units", href: "/dashboard/inventory/units", icon: Boxes },
+        { title: "Warehouse", href: "/dashboard/inventory/warehouse", icon: Warehouse },
+        { title: "Suppliers", href: "/dashboard/inventory/suppliers", icon: Users },
+        { title: "Adjustments", href: "/dashboard/inventory/adjustments", icon: Package },
+    ];
 
     const settingLinks = [
-        {
-            title: "Roles",
-            href: "/dashboard/settings/roles"
-        },
-        {
-            title: "Add Permission",
-            href: "/dashboard/settings/permissions/action"
-        },
-        {
-            title: "Manage Permission",
-            href: "/dashboard/settings/permissions/manage"
-        },
-        {
-            title: "Reorder Manage",
-            href: "/dashboard/settings/reorder/manage"
-        },
-    ]
+        { title: "Roles", href: "/dashboard/settings/roles", icon: UserCog },
+        { title: "Add Permission", href: "/dashboard/settings/permissions/action", icon: PlusCircle },
+        { title: "Manage Permission", href: "/dashboard/settings/permissions/manage", icon: ShieldCheck },
+        { title: "Reorder Manage", href: "/dashboard/settings/reorder/manage", icon: ListChecks },
+    ];
 
-    const salesLinks = [
-        {
-            title: "Customers",
-            href: "#"
-        },
-        {
-            title: "Sales Orders",
-            href: "#"
-        },
-        {
-            title: "Packages",
-            href: "#"
-        },
-        {
-            title: "Shipments",
-            href: "#"
-        },
-        {
-            title: "Invoices",
-            href: "#"
-        },
-        {
-            title: "Sales Receipts",
-            href: "#"
-        },
-        {
-            title: "Payment Received",
-            href: "#"
-        },
-        {
-            title: "Sales Returns",
-            href: "#"
-        },
-        {
-            title: "Credit Notes",
-            href: "#"
-        }
-    ]
     return (
-        <div className={`
-        w-56 min-h-screen bg-slate-800 text-slate-50 flex flex-col justify-between 
-        fixed z-50 top-0 left-0 
-        ${showSidebar ? 'block' : 'hidden'} 
-        lg:block`}>
-            {/* Top Part */}
-            <div className='flex flex-col'>
-                {/* Logo */}
+        <div
+            className={`
+    fixed lg:relative top-0 left-0 z-40 h-screen bg-slate-900 text-white
+    flex-col transition-all duration-300
+    ${isLargeScreen ? (collapsed ? "w-20" : "w-64") : (!collapsed ? "w-64" : "w-20")}
+    ${!isLargeScreen && !showSidebar ? "hidden" : "flex"}
+   
+  `}
+        >
 
-                <div className="flex justify-between bg-slate-950">
-                    <Link href="#" className="flex space-x-2 items-center py-3 px-2 w-full">
-                        <ShoppingCart />
-                        <span className='text-xl font-semibold'> Inventory </span>
-                    </Link>
-                    <button className='px-6 py-4 lg:hidden' onClick={() => setShowSidebar(false)} >
-                        <X className='w-6 h-6 text-white' />
-                    </button>
-                </div>
-                {/* Links */}
-                <nav className='flex flex-col gap-3 px-3 py-6'>
-                    <Link className="flex items-center space-x-2 
-                    bg-blue-600 text-slate-50 p-2 rounded-md"
-                        href="/dashboard/home/overview">
-                        <Home className='w-4 h-4' />
-                        <span>Home</span>
-                    </Link>
-                    <SidebarDropdownLink
-                        items={inventoryLinks}
-                        title="Inventory"
-                        icon={BaggageClaim}
-                        setShowSidebar={setShowSidebar} />
-
-                    <Link className="flex items-center space-x-2 p-2"
-                        href="#">
-                        <BarChart4 className='w-4 h-4' />
-                        <span>Reports</span>
-                    </Link>
-
-                    <Link className="flex items-center space-x-2 p-2"
-                        href="#">
-                        <FilesIcon className='w-4 h-4' />
-                        <span>Documents</span>
-                    </Link>
-                    <SidebarDropdownLink
-                        items={settingLinks}
-                        title="Settings"
-                        icon={ShoppingBasket} />
-                </nav>
-                <SubscriptionCard />
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-slate-800">
+                {!collapsed && <h1 className="text-xl font-bold">MyApp</h1>}
+                <button onClick={() => setCollapsed(!collapsed)} className="text-slate-300 hover:text-white">
+                    {collapsed ? <ChevronRight /> : <ChevronLeft />}
+                </button>
             </div>
 
-            {/* Bottom Part - Arrow */}
-            <button className="flex space-x-2 items-center justify-center bg-slate-950 py-3 px-2">
-                <ChevronLeft />
-            </button>
+            {/* Scrollable Navigation */}
+            <nav className="flex-1 overflow-y-auto px-2 py-4 custom-scroll">
+                {/* Home */}
+                <NavItem
+                    title="Home"
+                    href="/dashboard/home/overview"
+                    icon={Home}
+                    isActive={pathname === "/dashboard"}
+                    collapsed={collapsed}
+                />
+
+                {/* Section Divider */}
+                {!collapsed && <p className="px-4 pt-4 text-xs text-slate-500">MANAGE</p>}
+
+                {/* Inventory */}
+                <div>
+                    <button
+                        onClick={() => toggleDropdown("inventory")}
+                        className={`flex items-center gap-3 px-4 py-2 w-full text-left rounded-md transition-all
+              ${collapsed ? "justify-center" : ""}
+              ${openDropdowns.inventory ? "bg-blue-900 text-white" : "text-slate-300 hover:bg-slate-800"}
+            `}
+                    >
+                        <Boxes size={20} />
+                        {!collapsed && (
+                            <>
+                                <span>Inventory</span>
+                                <span className="ml-auto">
+                                    {openDropdowns.inventory ? <ChevronUp /> : <ChevronDown />}
+                                </span>
+                            </>
+                        )}
+                    </button>
+                    {openDropdowns.inventory && !collapsed && (
+                        <div className="ml-6 mt-1 space-y-1">
+                            {inventoryLinks.map(({ title, href, icon }) => (
+                                <NavItem
+                                    key={href}
+                                    title={title}
+                                    href={href}
+                                    icon={icon}
+                                    isActive={pathname === href}
+                                    collapsed={collapsed}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Documents */}
+                <NavItem
+                    title="Documents"
+                    href="/dashboard/documents"
+                    icon={FileText}
+                    isActive={pathname === "/dashboard/documents"}
+                    collapsed={collapsed}
+                />
+
+                {/* Reports */}
+                <NavItem
+                    title="Reports"
+                    href="/dashboard/reports"
+                    icon={BarChart2}
+                    isActive={pathname === "/dashboard/reports"}
+                    collapsed={collapsed}
+                />
+
+                {/* Section Divider */}
+                {!collapsed && <p className="px-4 pt-4 text-xs text-slate-500">SYSTEM</p>}
+
+                {/* Settings */}
+                <div>
+                    <button
+                        onClick={() => toggleDropdown("settings")}
+                        className={`flex items-center gap-3 px-4 py-2 w-full text-left rounded-md transition-all
+              ${collapsed ? "justify-center" : ""}
+              ${openDropdowns.settings ? "bg-blue-900 text-white" : "text-slate-300 hover:bg-slate-800"}
+            `}
+                    >
+                        <Settings size={20} />
+                        {!collapsed && (
+                            <>
+                                <span>Settings</span>
+                                <span className="ml-auto">
+                                    {openDropdowns.settings ? <ChevronUp /> : <ChevronDown />}
+                                </span>
+                            </>
+                        )}
+                    </button>
+                    {openDropdowns.settings && !collapsed && (
+                        <div className="ml-6 mt-1 space-y-1">
+                            {settingLinks.map(({ title, href, icon }) => (
+                                <NavItem
+                                    key={href}
+                                    title={title}
+                                    href={href}
+                                    icon={icon}
+                                    isActive={pathname === href}
+                                    collapsed={collapsed}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </nav>
+
+            {/* Footer */}
+            <div className="border-t border-slate-800 px-4 py-4 flex items-center gap-3">
+                <Image
+                    src="/avatar.png"
+                    alt="User Avatar"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                />
+                {!collapsed && (
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-white">Sushma Yadav</p>
+                        <p className="text-xs text-slate-400">Admin</p>
+                    </div>
+                )}
+                <LogOut size={20} className="cursor-pointer text-slate-400 hover:text-white" />
+            </div>
         </div>
-    )
+    );
 }
