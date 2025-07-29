@@ -96,7 +96,6 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
     flex-col transition-all duration-300
     ${isLargeScreen ? (collapsed ? "w-20" : "w-64") : (!collapsed ? "w-64" : "w-20")}
     ${!isLargeScreen && !showSidebar ? "hidden" : "flex"}
-   
   `}
                 >
 
@@ -233,7 +232,12 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
                         {!collapsed && (
                             <div className="flex-1">
                                 <p className="text-sm font-medium text-white">{username}</p>
-                                <p className="text-xs text-slate-400"> {session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1).toLowerCase() ?? "User"}</p>
+                                <p className="text-xs text-slate-400">
+                                    {session?.user?.role
+                                        ? session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1).toLowerCase()
+                                        : "User"}
+                                </p>
+
                             </div>
                         )}
                         <LogOut size={20} className="cursor-pointer text-slate-400 hover:text-white" />
