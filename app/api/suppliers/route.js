@@ -1,5 +1,9 @@
 import db from "@/lib/db";
 import { NextResponse } from "next/server";
+import { softDelete, softReactivate } from "@/lib/softCrud";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authOptions";
+import { getFilters } from "@/lib/filters/getFilters";
 
 export async function POST(request) {
     try {
@@ -29,24 +33,69 @@ export async function POST(request) {
     }
 }
 
+
 export async function GET(request) {
     try {
-        const suppliers = await db.supplier.findMany({
-            orderBy: {
-                createdAt: 'desc' //Latest warehouse
-            }
-        })
-        return NextResponse.json(suppliers);
+        const { take, skip, sortBy, sortOrder, search, status, fromDate, toDate } = getFilters(request);
+
+        const where = {};
+
+        // Search filter
+        if (search) {
+            where.title = {
+                contains: search,
+                mode: "insensitive",
+            };
+        }
+
+        // Status filter
+        if (status === "active") {
+            where.isActive = true;
+        } else if (status === "inactive") {
+            where.isActive = false;
+        }
+
+        // Date filter
+        if (fromDate && toDate) {
+            where.createdAt = {
+                gte: new Date(fromDate),
+                lte: new Date(toDate),
+            };
+        } else if (fromDate) {
+            where.createdAt = {
+                gte: new Date(fromDate),
+            };
+        } else if (toDate) {
+            where.createdAt = {
+                lte: new Date(toDate),
+            };
+        }
+
+        const [items, totalCount] = await Promise.all([
+            db.supplier.findMany({
+                where,
+                take,
+                skip,
+                orderBy: {
+                    [sortBy]: sortOrder,
+                },
+            }),
+            db.supplier.count({ where }),
+        ]);
+
+        return NextResponse.json({ items, totalCount });
     } catch (error) {
-        console.log(error)
-        return NextResponse.json({
-            error,
-            message: "Failed to fetch the Suppliers"
-        }, {
-            status: 500
-        })
+        console.error(error);
+        return NextResponse.json(
+            {
+                message: "Failed to fetch the Suppliers",
+                error,
+            },
+            { status: 500 }
+        );
     }
 }
+
 
 
 export async function DELETE(request) {
@@ -81,7 +130,7 @@ export async function DELETE(request) {
                 });
             }
 
-            throw error; 
+            throw error;
         }
     } catch (error) {
         return NextResponse.json({

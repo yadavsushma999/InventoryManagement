@@ -3,7 +3,8 @@ import db from "@/lib/db";
 import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
- // make sure this points to your NextAuth config
+import { getFilters } from "@/lib/filters/getFilters";
+// make sure this points to your NextAuth config
 
 // ✅ CONFIG
 const MODEL = "category";
@@ -12,17 +13,63 @@ const UNIQUE_FIELD = "title";
 /**
  * GET: List only active
  */
-export async function GET() {
+
+export async function GET(request) {
     try {
-        const items = await db[MODEL].findMany({
-            where: { isActive: true },
-        });
-        return NextResponse.json(items);
+        const { take, skip, search, status, sortBy, sortOrder, fromDate, toDate } = getFilters(request);
+
+        const where = {};
+
+        // Status filter
+        if (status === "active") {
+            where.isActive = true;
+        } else if (status === "inactive") {
+            where.isActive = false;
+        }
+
+        // Search by title (case-insensitive)
+        if (search) {
+            where.title = {
+                contains: search,
+                mode: "insensitive",
+            };
+        }
+
+        // Date filter
+        if (fromDate && toDate) {
+            where.createdAt = {
+                gte: new Date(fromDate),
+                lte: new Date(toDate),
+            };
+        } else if (fromDate) {
+            where.createdAt = {
+                gte: new Date(fromDate),
+            };
+        } else if (toDate) {
+            where.createdAt = {
+                lte: new Date(toDate),
+            };
+        }
+
+        const [items, totalCount] = await Promise.all([
+            db[MODEL].findMany({
+                where,
+                take,
+                skip,
+                orderBy: {
+                    [sortBy || "createdAt"]: sortOrder || "desc",
+                },
+            }),
+            db[MODEL].count({ where }),
+        ]);
+
+        return NextResponse.json({ items, totalCount });
     } catch (err) {
         console.error(err);
         return NextResponse.json({ message: "Failed to list" }, { status: 500 });
     }
 }
+
 
 /**
  * POST: Create or prompt to reactivate

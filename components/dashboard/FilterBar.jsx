@@ -27,6 +27,14 @@ export default function FilterBar({
     { value: "desc", label: "⬇️ Desc" },
   ];
 
+  // 🔍 Only include fields with `filter !== false`
+  const filterableFields = columns
+    .map((col) => ({
+      ...col,
+      fields: col.fields.filter((field) => field.filter !== false),
+    }))
+    .filter((col) => col.fields.length > 0);
+
   return (
     <div className="h-full flex flex-col">
       {/* 🚀 Scrollable Filter Body */}
@@ -69,7 +77,7 @@ export default function FilterBar({
           </div>
         )}
 
-        {/* 📅 Date Range in a single row */}
+        {/* 📅 Date Range */}
         {enableDateFilter && (
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">📅 Date Range</label>
@@ -90,7 +98,7 @@ export default function FilterBar({
           </div>
         )}
 
-        {/* ↕️ Sort By as badges */}
+        {/* ↕️ Sort By */}
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">↕️ Sort By</label>
           <div className="flex flex-wrap gap-2">
@@ -103,7 +111,7 @@ export default function FilterBar({
             >
               None
             </button>
-            {columns.map((col) => (
+            {filterableFields.map((col) => (
               <button
                 key={col.header}
                 onClick={() => setSortBy(col.fields[0]?.key)}
@@ -118,7 +126,7 @@ export default function FilterBar({
           </div>
         </div>
 
-        {/* 🔃 Sort Order as badges */}
+        {/* 🔃 Sort Order */}
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">🔃 Sort Order</label>
           <div className="flex flex-wrap gap-2">
@@ -137,7 +145,7 @@ export default function FilterBar({
           </div>
         </div>
 
-        {/* 📂 Group By as select dropdown */}
+        {/* 📂 Group By */}
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">📂 Group By</label>
           <select
@@ -146,7 +154,7 @@ export default function FilterBar({
             className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-200"
           >
             <option value="">None</option>
-            {columns.map((col) => (
+            {filterableFields.map((col) => (
               <option key={col.header} value={col.fields[0]?.key}>
                 {col.header}
               </option>

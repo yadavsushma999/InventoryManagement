@@ -53,19 +53,39 @@ export async function POST(request) {
  */
 
 export async function GET(request) {
-    const { take, skip, sortBy, sortOrder, search, status } = getFilters(request);
+    const { take, skip, sortBy, sortOrder, search, status, fromDate, toDate } = getFilters(request);
 
     const where = {};
 
-    // Handle Active / Inactive / All filtering
+    // Filter by active/inactive status
     if (status === "active") {
         where.isActive = true;
     } else if (status === "inactive") {
         where.isActive = false;
-    } // "all" skips filtering
+    }
 
+    // Search by title (case-insensitive)
     if (search) {
-        where.title = { contains: search, mode: "insensitive" };
+        where.title = {
+            contains: search,
+            mode: "insensitive",
+        };
+    }
+
+    // Filter by createdAt date range
+    if (fromDate && toDate) {
+        where.createdAt = {
+            gte: new Date(fromDate),
+            lte: new Date(toDate),
+        };
+    } else if (fromDate) {
+        where.createdAt = {
+            gte: new Date(fromDate),
+        };
+    } else if (toDate) {
+        where.createdAt = {
+            lte: new Date(toDate),
+        };
     }
 
     try {
@@ -74,13 +94,24 @@ export async function GET(request) {
                 where,
                 take,
                 skip,
-                orderBy: { [sortBy]: sortOrder },
+                orderBy:
+                    sortBy === "category.title"
+                        ? { category: { title: sortOrder } }
+                        : { [sortBy || "createdAt"]: sortOrder || "desc" },
                 select: {
                     id: true,
                     title: true,
                     quantity: true,
                     imageUrl: true,
-                    category: { select: { title: true } },
+                    sellingPrice: true,
+                    buyingPrice: true,
+                    isActive: true,
+                    createdAt: true,
+                    category: {
+                        select: {
+                            title: true,
+                        },
+                    },
                     stock: {
                         select: {
                             quantity: true,
@@ -88,13 +119,15 @@ export async function GET(request) {
                             location: {
                                 select: {
                                     name: true,
-                                    warehouse: { select: { title: true } },
+                                    warehouse: {
+                                        select: {
+                                            title: true,
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
-                    createdAt: true,
-                    isActive: true,
                 },
             }),
             db.item.count({ where }),
@@ -104,11 +137,15 @@ export async function GET(request) {
     } catch (error) {
         console.error("[GET /api/items] Error:", error);
         return NextResponse.json(
-            { message: "Failed to fetch items", error: error.message },
+            {
+                message: "Failed to fetch items",
+                error: error.message,
+            },
             { status: 500 }
         );
     }
 }
+
 
 
 /**

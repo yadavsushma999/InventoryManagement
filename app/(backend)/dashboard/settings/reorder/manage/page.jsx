@@ -1,4 +1,4 @@
-import FixedHeader from "@/components/dashboard/FixedHeader";
+
 import DataTable from "@/components/dashboard/DataTable";
 import { getData } from "@/lib/getData";
 

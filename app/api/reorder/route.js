@@ -3,15 +3,49 @@ import db from "@/lib/db";
 import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
- // make sure this points to your NextAuth config
+import { getFilters } from "@/lib/filters/getFilters";
+// make sure this points to your NextAuth config
 
 // ✅ CONFIG
 const MODEL = "itemStock";
 const UNIQUE_FIELD = "reorderPoint";
 
-export async function GET() {
+export async function GET(request) {
     try {
-        const items = await db[MODEL].findMany({
+        const { take, skip, sortBy, sortOrder, search, status, fromDate, toDate } = getFilters(request);
+
+        const where = {};
+
+        // Search in item.title or item.sku
+        if (search) {
+            where.item = {
+                OR: [
+                    { title: { contains: search, mode: "insensitive" } },
+                    { sku: { contains: search, mode: "insensitive" } },
+                ],
+            };
+        }
+
+        // Date range filter
+        if (fromDate || toDate) {
+            where.createdAt = {};
+            if (fromDate) where.createdAt.gte = new Date(fromDate);
+            if (toDate) where.createdAt.lte = new Date(toDate);
+        }
+
+        // Sort setup
+        let order = { createdAt: "desc" }; // default
+
+        if (sortBy === "itemTitle") {
+            order = { item: { title: sortOrder || "asc" } };
+        } else if (sortBy === "warehouse") {
+            order = { location: { warehouse: { title: sortOrder || "asc" } } };
+        } else if (sortBy) {
+            order = { [sortBy]: sortOrder || "asc" };
+        }
+
+        const items = await db.itemStock.findMany({
+            where,
             include: {
                 item: {
                     select: {
@@ -20,29 +54,23 @@ export async function GET() {
                         sku: true,
                         imageUrl: true,
                         isActive: true,
-                        category: {
-                            select: {
-                                title: true
-                            }
-                        }
-                    }
+                        category: { select: { title: true } },
+                    },
                 },
                 location: {
                     select: {
                         id: true,
                         name: true,
-                        warehouse: {
-                            select: {
-                                id: true,
-                                title: true
-                            }
-                        }
-                    }
-                }
+                        warehouse: { select: { id: true, title: true } },
+                    },
+                },
             },
+            take,
+            skip,
+            orderBy: order,
         });
 
-        const flattened = items.map(stock => {
+        const flattened = items.map((stock) => {
             const item = stock.item;
             const location = stock.location;
             const branch = location?.warehouse?.title || location?.name || "Unknown";
@@ -65,10 +93,13 @@ export async function GET() {
 
         return NextResponse.json(flattened);
     } catch (err) {
-        console.error(err);
-        return NextResponse.json({ message: "Failed to list" }, { status: 500 });
+        console.error("ItemStock fetch error:", err);
+        return NextResponse.json({ message: "Failed to list item stock" }, { status: 500 });
     }
 }
+
+
+
 
 
 /**

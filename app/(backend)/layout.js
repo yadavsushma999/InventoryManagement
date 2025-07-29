@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { EdgeStoreProvider } from "@/lib/edgestore"; // ✅ Make sure the path is correct
+import { EdgeStoreProvider } from "@/lib/edgestore"; 
 import Header from "@/components/dashboard/Header.jsx";
 import Sidebar from "@/components/dashboard/Sidebar.jsx";
 import Loader from "@/components/dashboard/Loader";
@@ -13,8 +13,6 @@ export default function Layout({ children }) {
   const [showSidebar, setShowSidebar] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
-  console.log("Sidebare visible?", showSidebar, setShowSidebar);
-
 
   // Redirect unauthenticated users
   useEffect(() => {
