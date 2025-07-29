@@ -32,7 +32,7 @@ export default function Layout({ children }) {
 
         {/* Sidebar */}
         {/* Sidebar */}
-        <div className="h-full bg-white shadow-md overflow-y-auto w-64 flex-shrink-0">
+        <div className="h-full bg-white shadow-md overflow-y-auto  flex-shrink-0">
           <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
         </div>
 
