@@ -10,23 +10,53 @@ export default async function Suppliers() {
         {
             header: "📇 Supplier Info",
             fields: [
-                { key: "title", label: " ", style: "primary" },
-                { key: "supplierCode", label:"Supplier Code: ",style: "secondary" },
-                { key: "phone", label: "📞 ", style: "secondary" },
-                { key: "email", label: "📧 ", style: "secondary" },
+                { key: "title", label: " ", style: "primary", filter: false },
+                { key: "supplierCode", label: "Supplier Code: ", style: "secondary", filter: false },
+                { key: "phone", label: "📞 ", style: "secondary", filter: false },
+                { key: "email", label: "📧 ", style: "secondary", filter: false },
+            ],
+        },
+        {
+            header: "Supplier Name",
+            fields: [
+                { key: "title", label: "🏷️",style: "secondary", visible: false },
+            ],
+        },
+        {
+            header: "Supplier Code",
+            fields: [
+                { key: "supplierCode",label: "🔢", style: "secondary", visible: false },
+            ],
+        },
+        {
+            header: "Phone No",
+            fields: [
+                { key: "phone",label: "📞 ", style: "secondary", visible: false },
+            ],
+        },
+        {
+            header: "Email Id",
+            fields: [
+                { key: "email", label: "📧 ",style: "secondary", visible: false },
+            ],
+        },
+        {
+            header: "Tax Id",
+            fields: [
+                { key: "taxID",  label: "💰 ",style: "secondary", visible: false },
             ],
         },
         {
             header: "🏢 Terms & Condition",
             fields: [
-                { key: "taxID", label: "Tax Id: " , style: "secondary" },
-                { key: "paymentTerms", label: "💰 ", style: "secondary" },
+                { key: "taxID", label: "Tax Id: ", style: "secondary", filter: false },
+                { key: "paymentTerms", label: "💰 ", style: "secondary", filter: false },
             ],
         },
         {
             header: "Notes",
             fields: [
-                { key: "notes", style: "secondary" },
+                { key: "notes", style: "secondary", filter: false },
 
             ],
         },

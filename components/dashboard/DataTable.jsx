@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Filter } from "lucide-react";
+import { Plus, Filter,SlidersHorizontal } from "lucide-react";
 import ListTable from "@/components/dashboard/ListTable";
 import FilterBar from "@/components/dashboard/FilterBar";
 import FilterSlideOver from "@/components/dashboard/FilterSildeOver";
@@ -29,7 +29,6 @@ export default function DataTable({
 
   const isHiddenLink = ["", "reorder", "adjustments/transfer"].includes(cleanedLink);
   const [data, setData] = useState(initialData);
-  console.log("DataTable", data);
   const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +40,9 @@ export default function DataTable({
   const [showFilter, setShowFilter] = useState(false);
 
   const [sortBy, setSortBy] = useState("createdAt");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortOrder, setSortOrder] = useState("");
+  const [groupBy, setGroupBy] = useState("");
+
 
   const fetchData = async () => {
     setLoading(true);
@@ -109,7 +110,7 @@ export default function DataTable({
       setToDate(last);
     }
     setSortBy("createdAt");
-    setSortOrder("desc");
+    setSortOrder("");
     setCurrentPage(1);
   };
 
@@ -136,7 +137,7 @@ export default function DataTable({
             {!isHiddenLink && (
               <Link
                 href={`/dashboard/${module}/${finalLink}/new`}
-                className="inline-flex items-center gap-1 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700"
+                className="inline-flex items-center gap-1 px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700"
               >
                 <Plus className="w-4 h-4" /> New {resourceTitle}
               </Link>
@@ -145,7 +146,7 @@ export default function DataTable({
               onClick={() => setShowFilter(!showFilter)}
               className="relative p-2 border rounded hover:bg-gray-100"
             >
-              <Filter className="w-4 h-4" />
+              <SlidersHorizontal className="w-4 h-4" />
               {activeFiltersCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                   {activeFiltersCount}
@@ -167,6 +168,7 @@ export default function DataTable({
           setSortOrder={setSortOrder}
           showView={showView}
           resourceLink={resourceLink}
+          groupBy={groupBy}
         />
 
         {totalPages > 1 && (
@@ -221,6 +223,8 @@ export default function DataTable({
               sortOrder={sortOrder}
               setSortOrder={setSortOrder}
               columns={columns}
+              groupBy={groupBy}
+              setGroupBy={setGroupBy}
             />
           </FilterSlideOver>
         </div>

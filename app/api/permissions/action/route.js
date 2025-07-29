@@ -1,14 +1,50 @@
 
 import db from "@/lib/db";
 import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/authOptions";
+import { getFilters } from "@/lib/filters/getFilters";
 
-export async function GET() {
+export async function GET(request) {
     try {
-        const permissions = await db.permission.findMany({
-            //orderBy: { createdAt: "desc" }, // ✅ optional: only if you have createdAt
-        });
+        const { take, skip, sortBy, sortOrder, search, fromDate, toDate } = getFilters(request);
 
-        return NextResponse.json(permissions);
+
+        const where = {};
+
+        // Text search on name or description
+        if (search) {
+            where.OR = [
+                { name: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+            ];
+        }
+
+
+
+        // Date filter
+        if (fromDate || toDate) {
+            where.createdAt = {};
+            if (fromDate) {
+                where.createdAt.gte = new Date(fromDate);
+            }
+            if (toDate) {
+                where.createdAt.lte = new Date(toDate);
+            }
+        }
+
+        const [items, totalCount] = await Promise.all([
+            db.permission.findMany({
+                where,
+                take,
+                skip,
+                orderBy: {
+                    [sortBy]: sortOrder,
+                },
+            }),
+            db.permission.count({ where }),
+        ]);
+
+        return NextResponse.json({ items, totalCount });
     } catch (error) {
         console.error(error);
         return NextResponse.json(

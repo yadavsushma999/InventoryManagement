@@ -3,7 +3,8 @@ import db from "@/lib/db";
 import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
- // make sure this points to your NextAuth config
+import { getFilters } from "@/lib/filters/getFilters";
+// make sure this points to your NextAuth config
 
 // ✅ CONFIG
 const MODEL = "role";
@@ -12,17 +13,61 @@ const UNIQUE_FIELD = "name";
 /**
  * GET: List only active
  */
-export async function GET() {
+
+
+export async function GET(request) {
     try {
-        const items = await db[MODEL].findMany({
-            where: { isActive: true },
-        });
-        return NextResponse.json(items);
+        const { take, skip, sortBy, sortOrder, search, status, fromDate, toDate } = getFilters(request);
+        const where = {};
+        if (search) {
+            where.name = {
+                contains: search,
+                mode: "insensitive",
+            };
+        }
+
+        // Status filter
+        if (status === "active") {
+            where.isActive = true;
+        } else if (status === "inactive") {
+            where.isActive = false;
+        }
+
+        // Date filter
+        if (fromDate && toDate) {
+            where.createdAt = {
+                gte: new Date(fromDate),
+                lte: new Date(toDate),
+            };
+        } else if (fromDate) {
+            where.createdAt = {
+                gte: new Date(fromDate),
+            };
+        } else if (toDate) {
+            where.createdAt = {
+                lte: new Date(toDate),
+            };
+        }
+
+        const [items, totalCount] = await Promise.all([
+            db[MODEL].findMany({
+                where,
+                take,
+                skip,
+                orderBy: {
+                    [sortBy]: sortOrder,
+                },
+            }),
+            db[MODEL].count({ where }),
+        ]);
+
+        return NextResponse.json({ items, totalCount });
     } catch (err) {
         console.error(err);
         return NextResponse.json({ message: "Failed to list" }, { status: 500 });
     }
 }
+
 
 /**
  * POST: Create or prompt to reactivate

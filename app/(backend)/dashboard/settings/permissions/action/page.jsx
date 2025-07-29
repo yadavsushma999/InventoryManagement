@@ -6,9 +6,7 @@ import React from 'react'
 // ✅ Tell Next.js this page must be dynamic (always server-rendered)
 export const dynamic = "force-dynamic";
 
-export default async function Permissions() {
-    const result = await getData("permissions");
-    const permissions = result; // always an array
+export default async function Permissions() {// always an array
       const columns = [
         {
             header: "🏷️ Name",
@@ -38,7 +36,6 @@ export default async function Permissions() {
           
             <div className="my-4 p-8">
                 <DataTable
-                    data={permissions}
                     columns={columns}
                     module="settings"
                     resourceTitle="permissions"

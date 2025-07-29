@@ -7,11 +7,15 @@ const columns = [
     fields: [{ key: "imageUrl", label: "", style: "primary" }],
   },
   {
-    header: "🏷️ Title & Qty",
+    header: "🏷️ Title & Selling Price  ",
     fields: [
-      { key: "title", label: "🏷️", style: "primary" },
-      { key: "quantity", label: "🔢", style: "secondary" },
+      { key: "title", label: "🏷️", style: "primary",filter:false },
+      { key: "quantity", label: "🔢", style: "secondary",filter:false },
     ],
+  },
+  {
+    header: "🗂️ Title",
+    fields: [{ key: "title", label: "📂", style: "secondary",visible:false }],
   },
   {
     header: "🗂️ Category",
