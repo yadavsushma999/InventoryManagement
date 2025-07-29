@@ -89,7 +89,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
     return (
         <AuthenticatedUser>
             {({ username, initials, session }) => (
-                
+
                 <div
                     className={`
     fixed lg:relative top-0 left-0 z-40 h-screen bg-slate-900 text-white
@@ -102,7 +102,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
 
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 border-b border-slate-800">
-                        {!collapsed && <h1 className="text-xl font-bold">MyApp</h1>}
+                        {!collapsed && <h1 className="text-xl font-bold">Inventory Management</h1>}
                         <button onClick={() => setCollapsed(!collapsed)} className="text-slate-300 hover:text-white">
                             {collapsed ? <ChevronRight /> : <ChevronLeft />}
                         </button>
@@ -223,7 +223,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
                                 width={32}
                                 height={32}
                                 className="rounded-full"
-                               // onError={() => setImageError(true)}
+                            // onError={() => setImageError(true)}
                             />
                         ) : (
                             <div className="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center font-bold text-sm">
@@ -233,7 +233,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
                         {!collapsed && (
                             <div className="flex-1">
                                 <p className="text-sm font-medium text-white">{username}</p>
-                                <p className="text-xs text-slate-400"> {session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1).toLowerCase()?? "User"}</p>
+                                <p className="text-xs text-slate-400"> {session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1).toLowerCase() ?? "User"}</p>
                             </div>
                         )}
                         <LogOut size={20} className="cursor-pointer text-slate-400 hover:text-white" />
