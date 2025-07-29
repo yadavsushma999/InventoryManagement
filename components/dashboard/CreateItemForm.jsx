@@ -21,8 +21,7 @@ export default function CreateItemForm({
     initialData = {},
     isUpdate = false,
 }) {
-    console.log("Brands",brands,)
-    console.log("Warehouse",warehouses);
+
     const [imageUrl, setImageUrl] = useState(initialData.imageUrl ?? []);
     const [loading, setLoading] = useState(false);
     const imageInputRef = useRef(null);
