@@ -28,13 +28,13 @@ export default function Layout({ children }) {
 
   return (
     <EdgeStoreProvider>
-      <div className="flex w-full min-h-screen">
-        {/* Sidebar */}
-        {/* Sidebar */}
-        <aside>
-          <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-        </aside>
+      <div className="flex w-full h-screen overflow-hidden">
 
+        {/* Sidebar */}
+        {/* Sidebar */}
+        <div className="h-full bg-white shadow-md overflow-y-auto w-64 flex-shrink-0">
+          <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+        </div>
 
         {/* Main content */}
         <main
