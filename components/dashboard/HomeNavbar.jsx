@@ -27,7 +27,10 @@ export default function HomeNavbar() {
                         <div className="flex flex-col">
                             <p className='text-slate-700 font-semibold text-sm md:text-base'>Hello, {username}</p>
                             <span className='text-xs md:text-sm text-slate-500'>
-                                {session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1).toLowerCase()}</span>
+                                {(session?.user?.role &&
+                                    session.user.role.charAt(0).toUpperCase() + session.user.role.slice(1).toLowerCase())
+                                    || "Guest"}
+                            </span>
                         </div>
                     </div>
 
