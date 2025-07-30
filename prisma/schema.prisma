@@ -221,10 +221,10 @@ model ItemStock {
   locationId   String @db.ObjectId
   quantity     Int
   reorderPoint Int
-
+  isActive     Boolean  @default(true) // ✅ Add this
+  deletedAt    DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   item     Item     @relation(fields: [itemId], references: [id])
   location Location @relation(fields: [locationId], references: [id])
 }

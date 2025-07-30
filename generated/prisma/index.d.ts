@@ -17270,6 +17270,8 @@ export namespace Prisma {
     locationId: string | null
     quantity: number | null
     reorderPoint: number | null
+    isActive: boolean | null
+    deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17280,6 +17282,8 @@ export namespace Prisma {
     locationId: string | null
     quantity: number | null
     reorderPoint: number | null
+    isActive: boolean | null
+    deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17290,6 +17294,8 @@ export namespace Prisma {
     locationId: number
     quantity: number
     reorderPoint: number
+    isActive: number
+    deletedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -17312,6 +17318,8 @@ export namespace Prisma {
     locationId?: true
     quantity?: true
     reorderPoint?: true
+    isActive?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17322,6 +17330,8 @@ export namespace Prisma {
     locationId?: true
     quantity?: true
     reorderPoint?: true
+    isActive?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17332,6 +17342,8 @@ export namespace Prisma {
     locationId?: true
     quantity?: true
     reorderPoint?: true
+    isActive?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -17429,6 +17441,8 @@ export namespace Prisma {
     locationId: string
     quantity: number
     reorderPoint: number
+    isActive: boolean
+    deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: ItemStockCountAggregateOutputType | null
@@ -17458,6 +17472,8 @@ export namespace Prisma {
     locationId?: boolean
     quantity?: boolean
     reorderPoint?: boolean
+    isActive?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
@@ -17472,11 +17488,13 @@ export namespace Prisma {
     locationId?: boolean
     quantity?: boolean
     reorderPoint?: boolean
+    isActive?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ItemStockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "locationId" | "quantity" | "reorderPoint" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStock"]>
+  export type ItemStockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "locationId" | "quantity" | "reorderPoint" | "isActive" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStock"]>
   export type ItemStockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     location?: boolean | LocationDefaultArgs<ExtArgs>
@@ -17494,6 +17512,8 @@ export namespace Prisma {
       locationId: string
       quantity: number
       reorderPoint: number
+      isActive: boolean
+      deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["itemStock"]>
@@ -17895,6 +17915,8 @@ export namespace Prisma {
     readonly locationId: FieldRef<"ItemStock", 'String'>
     readonly quantity: FieldRef<"ItemStock", 'Int'>
     readonly reorderPoint: FieldRef<"ItemStock", 'Int'>
+    readonly isActive: FieldRef<"ItemStock", 'Boolean'>
+    readonly deletedAt: FieldRef<"ItemStock", 'DateTime'>
     readonly createdAt: FieldRef<"ItemStock", 'DateTime'>
     readonly updatedAt: FieldRef<"ItemStock", 'DateTime'>
   }
@@ -18501,6 +18523,8 @@ export namespace Prisma {
     locationId: 'locationId',
     quantity: 'quantity',
     reorderPoint: 'reorderPoint',
+    isActive: 'isActive',
+    deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -19692,6 +19716,8 @@ export namespace Prisma {
     locationId?: StringFilter<"ItemStock"> | string
     quantity?: IntFilter<"ItemStock"> | number
     reorderPoint?: IntFilter<"ItemStock"> | number
+    isActive?: BoolFilter<"ItemStock"> | boolean
+    deletedAt?: DateTimeNullableFilter<"ItemStock"> | Date | string | null
     createdAt?: DateTimeFilter<"ItemStock"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStock"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
@@ -19704,6 +19730,8 @@ export namespace Prisma {
     locationId?: SortOrder
     quantity?: SortOrder
     reorderPoint?: SortOrder
+    isActive?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     item?: ItemOrderByWithRelationInput
@@ -19719,6 +19747,8 @@ export namespace Prisma {
     locationId?: StringFilter<"ItemStock"> | string
     quantity?: IntFilter<"ItemStock"> | number
     reorderPoint?: IntFilter<"ItemStock"> | number
+    isActive?: BoolFilter<"ItemStock"> | boolean
+    deletedAt?: DateTimeNullableFilter<"ItemStock"> | Date | string | null
     createdAt?: DateTimeFilter<"ItemStock"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStock"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
@@ -19731,6 +19761,8 @@ export namespace Prisma {
     locationId?: SortOrder
     quantity?: SortOrder
     reorderPoint?: SortOrder
+    isActive?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ItemStockCountOrderByAggregateInput
@@ -19749,6 +19781,8 @@ export namespace Prisma {
     locationId?: StringWithAggregatesFilter<"ItemStock"> | string
     quantity?: IntWithAggregatesFilter<"ItemStock"> | number
     reorderPoint?: IntWithAggregatesFilter<"ItemStock"> | number
+    isActive?: BoolWithAggregatesFilter<"ItemStock"> | boolean
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ItemStock"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ItemStock"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ItemStock"> | Date | string
   }
@@ -20897,6 +20931,8 @@ export namespace Prisma {
     id?: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutStockInput
@@ -20909,6 +20945,8 @@ export namespace Prisma {
     locationId: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20916,6 +20954,8 @@ export namespace Prisma {
   export type ItemStockUpdateInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutStockNestedInput
@@ -20927,6 +20967,8 @@ export namespace Prisma {
     locationId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20937,6 +20979,8 @@ export namespace Prisma {
     locationId: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20944,6 +20988,8 @@ export namespace Prisma {
   export type ItemStockUpdateManyMutationInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20953,6 +20999,8 @@ export namespace Prisma {
     locationId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21862,6 +21910,8 @@ export namespace Prisma {
     locationId?: SortOrder
     quantity?: SortOrder
     reorderPoint?: SortOrder
+    isActive?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21877,6 +21927,8 @@ export namespace Prisma {
     locationId?: SortOrder
     quantity?: SortOrder
     reorderPoint?: SortOrder
+    isActive?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21887,6 +21939,8 @@ export namespace Prisma {
     locationId?: SortOrder
     quantity?: SortOrder
     reorderPoint?: SortOrder
+    isActive?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23247,6 +23301,8 @@ export namespace Prisma {
     id?: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     location: LocationCreateNestedOneWithoutStockInput
@@ -23257,6 +23313,8 @@ export namespace Prisma {
     locationId: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23528,6 +23586,8 @@ export namespace Prisma {
     locationId?: StringFilter<"ItemStock"> | string
     quantity?: IntFilter<"ItemStock"> | number
     reorderPoint?: IntFilter<"ItemStock"> | number
+    isActive?: BoolFilter<"ItemStock"> | boolean
+    deletedAt?: DateTimeNullableFilter<"ItemStock"> | Date | string | null
     createdAt?: DateTimeFilter<"ItemStock"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStock"> | Date | string
   }
@@ -24878,6 +24938,8 @@ export namespace Prisma {
     id?: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutStockInput
@@ -24888,6 +24950,8 @@ export namespace Prisma {
     itemId: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25159,6 +25223,8 @@ export namespace Prisma {
     locationId: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25232,6 +25298,8 @@ export namespace Prisma {
   export type ItemStockUpdateWithoutItemInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: LocationUpdateOneRequiredWithoutStockNestedInput
@@ -25241,6 +25309,8 @@ export namespace Prisma {
     locationId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25249,6 +25319,8 @@ export namespace Prisma {
     locationId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25973,6 +26045,8 @@ export namespace Prisma {
     itemId: string
     quantity: number
     reorderPoint: number
+    isActive?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25980,6 +26054,8 @@ export namespace Prisma {
   export type ItemStockUpdateWithoutLocationInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutStockNestedInput
@@ -25989,6 +26065,8 @@ export namespace Prisma {
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25997,6 +26075,8 @@ export namespace Prisma {
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     reorderPoint?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

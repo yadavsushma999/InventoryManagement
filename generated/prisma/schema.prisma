@@ -216,15 +216,15 @@ model Location {
 }
 
 model ItemStock {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  itemId       String @db.ObjectId
-  locationId   String @db.ObjectId
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  itemId       String    @db.ObjectId
+  locationId   String    @db.ObjectId
   quantity     Int
   reorderPoint Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  item     Item     @relation(fields: [itemId], references: [id])
-  location Location @relation(fields: [locationId], references: [id])
+  isActive     Boolean   @default(true) // ✅ Add this
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  item         Item      @relation(fields: [itemId], references: [id])
+  location     Location  @relation(fields: [locationId], references: [id])
 }

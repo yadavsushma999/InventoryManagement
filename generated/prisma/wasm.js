@@ -283,6 +283,8 @@ exports.Prisma.ItemStockScalarFieldEnum = {
   locationId: 'locationId',
   quantity: 'quantity',
   reorderPoint: 'reorderPoint',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

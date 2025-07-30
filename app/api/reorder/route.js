@@ -4,9 +4,8 @@ import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { getFilters } from "@/lib/filters/getFilters";
-// make sure this points to your NextAuth config
 
-// ✅ CONFIG
+
 const MODEL = "itemStock";
 const UNIQUE_FIELD = "reorderPoint";
 
@@ -16,7 +15,12 @@ export async function GET(request) {
 
         const where = {};
 
-        // Search in item.title or item.sku
+       if (status === "active") {
+    where.item = { ...(where.item || {}), isActive: true };
+} else if (status === "inactive") {
+    where.item = { ...(where.item || {}), isActive: false };
+}
+
         if (search) {
             where.item = {
                 OR: [
@@ -26,15 +30,13 @@ export async function GET(request) {
             };
         }
 
-        // Date range filter
         if (fromDate || toDate) {
             where.createdAt = {};
             if (fromDate) where.createdAt.gte = new Date(fromDate);
             if (toDate) where.createdAt.lte = new Date(toDate);
         }
 
-        // Sort setup
-        let order = { createdAt: "desc" }; // default
+        let order = { createdAt: "desc" };
 
         if (sortBy === "itemTitle") {
             order = { item: { title: sortOrder || "asc" } };
@@ -44,31 +46,34 @@ export async function GET(request) {
             order = { [sortBy]: sortOrder || "asc" };
         }
 
-        const items = await db.itemStock.findMany({
-            where,
-            include: {
-                item: {
-                    select: {
-                        id: true,
-                        title: true,
-                        sku: true,
-                        imageUrl: true,
-                        isActive: true,
-                        category: { select: { title: true } },
+        const [items, totalCount] = await Promise.all([
+            db.itemStock.findMany({
+                where,
+                include: {
+                    item: {
+                        select: {
+                            id: true,
+                            title: true,
+                            sku: true,
+                            imageUrl: true,
+                            isActive: true,
+                            category: { select: { title: true } },
+                        },
+                    },
+                    location: {
+                        select: {
+                            id: true,
+                            name: true,
+                            warehouse: { select: { id: true, title: true } },
+                        },
                     },
                 },
-                location: {
-                    select: {
-                        id: true,
-                        name: true,
-                        warehouse: { select: { id: true, title: true } },
-                    },
-                },
-            },
-            take,
-            skip,
-            orderBy: order,
-        });
+                take,
+                skip,
+                orderBy: order,
+            }),
+            db.itemStock.count({ where }),
+        ]);
 
         const flattened = items.map((stock) => {
             const item = stock.item;
@@ -91,16 +96,15 @@ export async function GET(request) {
             };
         });
 
-        return NextResponse.json(flattened);
+        return NextResponse.json({
+            items: flattened,
+            totalCount,
+        });
     } catch (err) {
         console.error("ItemStock fetch error:", err);
         return NextResponse.json({ message: "Failed to list item stock" }, { status: 500 });
     }
 }
-
-
-
-
 
 /**
  * POST: Create or prompt to reactivate
