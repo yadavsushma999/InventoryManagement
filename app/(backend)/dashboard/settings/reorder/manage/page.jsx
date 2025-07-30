@@ -1,11 +1,5 @@
 
 import DataTable from "@/components/dashboard/DataTable";
-import { getData } from "@/lib/getData";
-
-export const dynamic = "force-dynamic";
-
-
-
 export default async function ReorderManage() {
 
     const columns = [
@@ -44,6 +38,7 @@ export default async function ReorderManage() {
                     resourceTitle="Stock Alert"
                     resourceLink="reorder"
                     module="settings"
+                    itemsPerPage={6}
                 />
             </div>
         </div>

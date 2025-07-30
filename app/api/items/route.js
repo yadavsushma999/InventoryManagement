@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { getFilters } from "@/lib/filters/getFilters";
 import { createItemWithStockAndWarehouse } from "@/lib/BusinessLogic/createItem";
+import { ObjectId } from "bson";
 
 const MODEL = "item"; // ✅ Corrected
 
@@ -147,42 +148,71 @@ export async function GET(request) {
 }
 
 
-
 /**
  * DELETE: Soft delete item by ID
  */
-export async function DELETE(request) {
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.id || "unknown";
+
+export async function DELETE(req) {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+        return NextResponse.json({ error: "Missing item ID" }, { status: 400 });
+    }
 
     try {
-        const id = request.nextUrl.searchParams.get("id");
-        if (!id) {
-            return NextResponse.json({ message: "ID required" }, { status: 400 });
-        }
+        const itemId = new ObjectId(id).toHexString();
 
-        const beforeDelete = await db[MODEL].findUnique({ where: { id } });
-        const updated = await softDelete(MODEL, id);
-
-        await db.auditLog.create({
-            data: {
-                action: "DELETE",
-                model: MODEL,
-                modelId: id,
-                userId,
-                oldValue: beforeDelete,
-            },
+        // ✅ Step 1: Find the item
+        const item = await db.item.findUnique({
+            where: { id: itemId },
+            include: { stock: true, warehouse: true }
         });
 
-        return NextResponse.json({ message: "Soft deleted", item: updated });
+        if (!item) {
+            return NextResponse.json({ error: "Item not found" }, { status: 404 });
+        }
+
+        const totalStockQty = item.quantity;
+
+        // ✅ Step 2: Set isActive=false on Item
+        await db.item.update({
+            where: { id: itemId },
+            data: {
+                isActive: false,
+                deletedAt: new Date()
+            }
+        });
+
+        // ✅ Step 3: Soft delete related ItemStock
+        await db.itemStock.updateMany({
+            where: { itemId: itemId },
+            data: {
+                isActive: false,
+                deletedAt: new Date()
+            }
+        });
+
+        // ✅ Step 4: Reduce warehouse stockQty
+        await db.warehouse.update({
+            where: { id: item.warehouseId },
+            data: {
+                stockQty: {
+                    decrement: totalStockQty
+                }
+            }
+        });
+
+        return NextResponse.json({ message: "Item deleted (soft delete) successfully" }, { status: 200 });
+
     } catch (error) {
-        console.error("[DELETE /api/items] Error:", error);
-        return NextResponse.json(
-            { message: "Failed to delete", error: error.message },
-            { status: 500 }
-        );
+        console.error("❌ Delete Item Error:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
+
+
+
 
 /**
  * PATCH: Reactivate item by ID

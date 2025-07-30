@@ -56,7 +56,7 @@ export default function ListTable({
 
   return (
     <div className="overflow-x-auto rounded shadow">
-      <table className="min-w-full text-sm text-left text-gray-700">
+      <table className="min-w-full  text-sm text-left text-gray-700">
         <thead className="bg-gray-100">
           <tr>
             <th className="px-4 py-2">#</th>
