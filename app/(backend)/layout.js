@@ -36,7 +36,7 @@ export default function Layout({ children }) {
 
         {/* Main content */}
         <main
-          className={`bg-gray-100 transition-all duration-300 lg:ml-5 px-4 md:px-8 py-4 flex-1 relative overflow-x-hidden
+          className={`bg-gray-100 transition-all duration-300 lg:ml-5 px-4 md:px-8 py-4 flex-1 relative overflow-auto
     ${showSidebar ? "ml-20 sm:ml-20" : "ml-0"}
   `}
         >

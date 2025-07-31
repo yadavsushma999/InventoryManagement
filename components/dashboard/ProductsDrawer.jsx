@@ -50,7 +50,7 @@ export default function ProductProfile({ product, onNext, onPrev }) {
     };
 
     const stockStatus = getStockStatus();
-    console.log("Product Image",product.imageUrl);
+    console.log("Product Image", product.imageUrl);
 
     return (
         <div className="max-w-6xl mx-auto p-6 md:p-10 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 space-y-10">
@@ -59,13 +59,20 @@ export default function ProductProfile({ product, onNext, onPrev }) {
                 {/* Header: Image + Info + Barcode */}
                 <div className="flex flex-col md:flex-row justify-between gap-6 items-start">
                     {/* Image */}
-                    <Image
-                        src={Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl}
-                        width={200}
-                        height={200}
-                        alt={product.title}
-                        className="rounded-xl border shadow-md object-cover"
-                    />
+                    {(Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl) ? (
+                        <Image
+                            src={Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl}
+                            width={200}
+                            height={200}
+                            alt={product.title || "Product Image"}
+                            className="rounded-xl border shadow-md object-cover"
+                        />
+                    ) : (
+                        <div className="w-[200px] h-[200px] flex items-center justify-center rounded-xl border shadow-md text-sm text-gray-400 bg-gray-100">
+                            No Image
+                        </div>
+                    )}
+
 
                     {/* Info */}
                     <div className="flex-1 space-y-3">
