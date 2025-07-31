@@ -8,6 +8,7 @@ const ImageInput2 = forwardRef(function ImageInput2({
     label = "🖼️ Upload Image",
     imageUrl = [],
     setImageUrl,
+    isRequire = true,
     endpoint = "publicFiles",
     maxImages = 1,
 }, ref) {
