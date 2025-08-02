@@ -7,10 +7,7 @@ const Barcode = dynamic(() => import("react-barcode"), { ssr: false });
 
 export default function ProductProfile({ product, onNext, onPrev }) {
     if (!product) return null;
-    console.log(product);
-
     const printRef = useRef(null);
-
     const handlePrint = () => {
         const printContents = printRef.current.innerHTML;
         const newWindow = window.open("", "_blank", "width=800,height=600");
@@ -50,8 +47,6 @@ export default function ProductProfile({ product, onNext, onPrev }) {
     };
 
     const stockStatus = getStockStatus();
-    console.log("Product Image", product.imageUrl);
-
     return (
         <div className="max-w-6xl mx-auto p-6 md:p-10 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 space-y-10">
             {/* Printable Content */}
