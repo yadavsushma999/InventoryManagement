@@ -20,8 +20,6 @@ export async function POST(request) {
 
     try {
         const body = await request.json();
-        console.log("body", body);
-
         const qty = parseInt(body.quantity || "0");
         if (isNaN(qty) || qty < 0) {
             return NextResponse.json(
@@ -46,8 +44,6 @@ export async function POST(request) {
         );
     }
 }
-
-
 
 /**
  * GET: List items with filtering, sorting, pagination, and status control

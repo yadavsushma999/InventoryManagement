@@ -8,23 +8,26 @@ const columns = [
       {
         key: "imageUrl",
         label: "",
+        type: "image", // optional for custom handling
         style: "primary",
         className: "w-20 whitespace-nowrap",
       },
     ],
   },
   {
-    header: "🏷️ Title & Selling Price",
+    header: "🏷️ Title & Quantity",
     fields: [
       {
         key: "title",
         label: "🏷️",
+        type: "string",
         style: "primary",
         className: "w-40 whitespace-nowrap",
       },
       {
         key: "quantity",
         label: "🔢",
+        type: "number",
         style: "secondary",
         className: "w-20 text-center whitespace-nowrap",
       },
@@ -36,6 +39,7 @@ const columns = [
       {
         key: "category.title",
         label: "📂",
+        type: "string",
         style: "secondary",
         className: "w-32 whitespace-nowrap",
       },
@@ -47,12 +51,14 @@ const columns = [
       {
         key: "quantity",
         label: "📦",
+        type: "number",
         style: "secondary",
         className: "w-24 text-right whitespace-nowrap",
       },
     ],
   },
 ];
+
 
 
 export default function ItemsPage() {
