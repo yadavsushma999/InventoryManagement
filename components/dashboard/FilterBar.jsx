@@ -1,4 +1,5 @@
 "use client";
+import AutoSuggestInput from "@/components/dashboard/AutoSuggestionInput";
 
 export default function FilterBar({
   search,
@@ -41,14 +42,13 @@ export default function FilterBar({
       <div className="flex-1 overflow-y-auto pr-2 space-y-6">
 
         {/* 🔍 Search */}
-        <div>
+        <div className="ml-2 mr-1">
           <label className="block mb-1 text-sm font-medium text-gray-700">🔍 Search</label>
-          <input
-            type="text"
-            placeholder="Type keywords..."
+          <AutoSuggestInput
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-200"
+            onChange={setSearch}
+            apiPath="/api/suggestions"
+            placeholder="Type keywords..."
           />
         </div>
 

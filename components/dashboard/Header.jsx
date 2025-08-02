@@ -12,7 +12,7 @@ import {
   Users
 } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchInput } from './SearchInput';
 import {
   DropdownMenu,
@@ -22,10 +22,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Loader from './Loader';
 import AuthenticatedUser from "@/components/auth/AuthenticatedUser";
+import { useSearchStore } from '@/lib/searchStore';
+import AutoSuggestInput from "@/components/dashboard/AutoSuggestionInput";
 
 export default function Header({ setShowSidebar }) {
+  const { search, setSearch } = useSearchStore();
   return (
     <AuthenticatedUser>
       {({ username, initials, session }) => (
@@ -39,7 +41,14 @@ export default function Header({ setShowSidebar }) {
               <History className="w-6 h-6" />
             </button>
             <div className="w-full sm:w-auto">
-              <SearchInput />
+              <AutoSuggestInput
+                value={search}
+                onChange={setSearch}
+                onSelect={(item) => setSearch(item.title)}
+                apiPath="/api/suggestions"
+                type="item"
+                placeholder="Search items by title, SKU, category..."
+              />
             </div>
           </div>
 

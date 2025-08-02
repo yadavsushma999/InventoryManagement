@@ -39,16 +39,40 @@ export default function ListTable({
       fields: col.fields.filter((f) => f.visible !== false),
     }));
 
+ const groupFieldType =
+    columns
+      .flatMap((col) => col.fields)
+      .find((f) => f.key === groupBy)?.type || "string";
+
+  // Group and sort the data
   const groupedData = groupBy
     ? Object.entries(
-      data.reduce((acc, item) => {
-        const key = getValueByPath(item, groupBy) ?? "Undefined";
-        acc[key] = acc[key] || [];
-        acc[key].push(item);
-        return acc;
-      }, {})
-    )
+        data.reduce((acc, item) => {
+          const key = getValueByPath(item, groupBy) ?? "Undefined";
+          acc[key] = acc[key] || [];
+          acc[key].push(item);
+          return acc;
+        }, {})
+      ).sort(([a], [b]) => {
+        const order = sortOrder || "asc";
+
+        if (groupFieldType === "date") {
+          return order === "desc"
+            ? new Date(b) - new Date(a)
+            : new Date(a) - new Date(b);
+        }
+
+        if (groupFieldType === "number") {
+          return order === "desc" ? +b - +a : +a - +b;
+        }
+
+        // default string sort
+        return order === "desc"
+          ? String(b).localeCompare(String(a))
+          : String(a).localeCompare(String(b));
+      })
     : null;
+
 
   if (!data.length) {
     return (
@@ -107,22 +131,45 @@ export default function ListTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {(groupBy && groupedData ? groupedData.flatMap(([, rows]) => rows) : data).map(
-              (item, index) => (
-                <TableRow
-                  key={item.id || index}
-                  item={item}
-                  columns={visibleColumns}
-                  idx={index}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  module={module}
-                  resourceTitle={resourceTitle}
-                  showView={showView}
-                  resourceLink={resourceLink}
-                />
-              )
-            )}
+           {groupBy && groupedData
+  ? groupedData.map(([groupName, rows]) => (
+      <React.Fragment key={groupName}>
+        <tr className="bg-gray-200 text-sm font-semibold text-gray-700">
+          <td colSpan={columns.length + 2} className="px-4 py-2">
+            {groupName}
+          </td>
+        </tr>
+        {rows.map((item, index) => (
+          <TableRow
+            key={item.id || index}
+            item={item}
+            columns={columns}
+            idx={index}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            module={module}
+            resourceTitle={resourceTitle}
+            showView={showView}
+            resourceLink={resourceLink}
+          />
+        ))}
+      </React.Fragment>
+    ))
+  : data.map((item, index) => (
+      <TableRow
+        key={item.id || index}
+        item={item}
+        columns={columns}
+        idx={index}
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        module={module}
+        resourceTitle={resourceTitle}
+        showView={showView}
+        resourceLink={resourceLink}
+      />
+    ))}
+
           </tbody>
         </table>
       </div>

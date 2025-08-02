@@ -8,6 +8,8 @@ import FilterBar from "@/components/dashboard/FilterBar";
 import FilterSlideOver from "@/components/dashboard/FilterSildeOver";
 import { getYearDates, exportCSV } from "@/lib/helpers";
 import { encryptStorage } from "@/lib/storageCrypto";
+import { useSearchStore } from '@/lib/searchStore'
+
 
 export default function DataTable({
   module,
@@ -34,7 +36,7 @@ export default function DataTable({
   const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [loading, setLoading] = useState(false);
 
-  const [search, setSearch] = useState("");
+  const { search, setSearch } = useSearchStore();
   const [status, setStatus] = useState("active");
   const [fromDate, setFromDate] = useState(enableDateFilter ? first : "");
   const [toDate, setToDate] = useState(enableDateFilter ? last : "");
@@ -125,28 +127,28 @@ export default function DataTable({
     exportCSV(data, `${resourceTitle}_export.csv`);
   };
 
- const activeFiltersCount = useMemo(() => {
-  let count = 0;
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
 
-  if (search.trim() !== "") count++;
+    if (search.trim() !== "") count++;
 
-  if (enableStatusFilter && status !== "active") count++;
+    if (enableStatusFilter && status !== "active") count++;
 
-  if (
-    enableDateFilter &&
-    (fromDate !== first || toDate !== last)
-  ) {
-    count++;
-  }
+    if (
+      enableDateFilter &&
+      (fromDate !== first || toDate !== last)
+    ) {
+      count++;
+    }
 
-  // Only count sortBy if it’s not default "createdAt"
-  if (sortBy && sortBy !== "createdAt") count++;
+    // Only count sortBy if it’s not default "createdAt"
+    if (sortBy && sortBy !== "createdAt") count++;
 
-  // Optional: count sortOrder if used
-  if (sortOrder && sortOrder !== "") count++;
+    // Optional: count sortOrder if used
+    if (sortOrder && sortOrder !== "") count++;
 
-  return count;
-}, [search, status, fromDate, toDate, sortBy, sortOrder, enableStatusFilter, enableDateFilter, first, last]);
+    return count;
+  }, [search, status, fromDate, toDate, sortBy, sortOrder, enableStatusFilter, enableDateFilter, first, last]);
 
 
   return (
@@ -225,9 +227,8 @@ export default function DataTable({
       </div>
 
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l transform transition-transform duration-300 ${
-          showFilter ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l transform transition-transform duration-300 ${showFilter ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">

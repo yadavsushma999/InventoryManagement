@@ -8,9 +8,9 @@ export function getFilters(request) {
     const sortOrder = sortOrderRaw.toLowerCase() === "asc" ? "asc" : "desc";
     const search = searchParams.get("search") ?? "";
     const status = searchParams.get("status") ?? "active";
-
     const fromDate = searchParams.get("fromDate") ?? "";
     const toDate = searchParams.get("toDate") ?? "";
+    const groupBy = searchParams.get("groupBy") ?? ""; // ✅ Add this
 
-    return { take, skip, sortBy, sortOrder, search, status, fromDate, toDate };
+    return { take, skip, sortBy, sortOrder, search, status, fromDate, toDate, groupBy };
 }
