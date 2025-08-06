@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import * as XLSX from "xlsx";
-import toast from "react-hot-toast"; // or "react-hot-toast"
-import { Progress } from "@/components/ui/progress"; // from shadcn/ui
-import { cn } from "@/lib/utils"; // if using conditional class utils
+import ExcelJS from "exceljs";
+import toast from "react-hot-toast"; 
+import { Progress } from "@/components/ui/progress"; 
+import { cn } from "@/lib/utils"; 
 import { Loader2 } from "lucide-react";
 
 
@@ -15,16 +15,34 @@ export default function UploadItems() {
     const [progress, setProgress] = useState(0);
 
     const handleUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        setExcelFile(file);
+    const file = e.target.files[0];
+    if (!file) return;
+    setExcelFile(file);
 
-        const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data);
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet);
-        setPreviewData(rows);
-    };
+    const buffer = await file.arrayBuffer();
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer);
+    const worksheet = workbook.worksheets[0];
+
+    const rows = [];
+    const headers = [];
+
+    worksheet.getRow(1).eachCell((cell, colNumber) => {
+        headers.push(cell.value);
+    });
+
+    worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return; // Skip header
+        const rowData = {};
+        row.eachCell((cell, colNumber) => {
+            const header = headers[colNumber - 1];
+            rowData[header] = cell.value;
+        });
+        rows.push(rowData);
+    });
+
+    setPreviewData(rows);
+};
 
     const handleSubmit = async () => {
         if (!excelFile) {
@@ -99,32 +117,44 @@ export default function UploadItems() {
         }
     };
 
-    const downloadTemplate = () => {
-        const worksheet = XLSX.utils.json_to_sheet([
-            {
-                "Title": "Sample Item",
-                "Description": "Sample description",
-                "SKU": "ITEMSKU123",
-                "Quantity": 10,
-                "Category": "Electronics",
-                "Brand": "BrandX",
-                "Unit": "pcs",
-                "Warehouse": "Main Warehouse",
-                "Supplier": "Supplier A",
-                "Buying Price": 100,
-                "Selling Price": 150,
-                "ReOrder Point": 5,
-                "Location": "Rack A1",
-                "Tax Rate": 18,
-                "Notes": "Sample note",
-                "ImagePath": "sample.jpg"
-            }
-        ]);
+    const downloadTemplate = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("ItemsTemplate");
 
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "ItemsTemplate");
-        XLSX.writeFile(workbook, "ItemsUploadTemplate.xlsx");
-    };
+    const data = [{
+        "Title": "Sample Item",
+        "Description": "Sample description",
+        "SKU": "ITEMSKU123",
+        "Quantity": 10,
+        "Category": "Electronics",
+        "Brand": "BrandX",
+        "Unit": "pcs",
+        "Warehouse": "Main Warehouse",
+        "Supplier": "Supplier A",
+        "Buying Price": 100,
+        "Selling Price": 150,
+        "ReOrder Point": 5,
+        "Location": "Rack A1",
+        "Tax Rate": 18,
+        "Notes": "Sample note",
+        "ImagePath": "sample.jpg"
+    }];
+
+    const headers = Object.keys(data[0]);
+    worksheet.addRow(headers);
+
+    data.forEach(item => {
+        worksheet.addRow(headers.map(header => item[header]));
+    });
+
+    const blob = await workbook.xlsx.writeBuffer();
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ItemsUploadTemplate.xlsx";
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
 
     return (
         <div className="flex justify-center px-4 py-10">

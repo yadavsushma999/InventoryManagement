@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { read, utils } from "xlsx";
+import ExcelJS from "exceljs";
 import path from "path";
 import fs from "fs";
 import axios from "axios";
@@ -46,7 +46,6 @@ async function uploadImageToSupabase(sourcePathOrUrl, originalFileName) {
     }
 }
 
-// Generate unique supplierCode respecting your schema
 async function generateUniqueSupplierCode(title) {
     const prefix = "SUP";
     const cleanTitle = title.replace(/\s+/g, "").toUpperCase().slice(0, 3) || "SUP";
@@ -82,9 +81,22 @@ export async function POST(req) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        const workbook = read(buffer);
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = utils.sheet_to_json(sheet);
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(buffer);
+
+        const worksheet = workbook.worksheets[0];
+        const rows = [];
+
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) return; // skip header
+            const rowData = {};
+            worksheet.getRow(1).eachCell((cell, colNumber) => {
+                const header = cell.value?.toString().trim();
+                const value = row.getCell(colNumber).value;
+                rowData[header] = typeof value === "object" && value?.text ? value.text : value;
+            });
+            rows.push(rowData);
+        });
 
         let createdCount = 0;
         const skipped = [];
@@ -124,7 +136,6 @@ export async function POST(req) {
                     continue;
                 }
 
-                // ✅ Supplier creation if not present
                 const supplierTitle = String(row["Supplier"] || "").trim();
                 let supplier = await db.supplier.findFirst({
                     where: { title: supplierTitle },

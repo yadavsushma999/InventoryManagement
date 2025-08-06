@@ -9,6 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
 # Prisma
 .env
 .prisma/
@@ -45,3 +46,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/generated
+
+#vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
