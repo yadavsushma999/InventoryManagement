@@ -25,17 +25,16 @@ export default function AutoSuggestInput({
       setShowSuggestions(false);
       return;
     }
-
-    fetchTimeoutRef.current = setTimeout(() => {
-      fetch(`${apiPath}?q=${encodeURIComponent(value.trim())}&type=${type}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setSuggestions(data.suggestions || []);
-          setShowSuggestions(true);
-        })
-        .catch((err) => console.error("Suggestion fetch error:", err));
-    }, 300);
-
+fetchTimeoutRef.current = setTimeout(() => {
+  const url = `${apiPath}/${type}?q=${encodeURIComponent(value.trim())}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      setSuggestions(data.suggestions || []);
+      setShowSuggestions(true);
+    })
+    .catch((err) => console.error("Suggestion fetch error:", err));
+}, 300);
     return () => clearTimeout(fetchTimeoutRef.current);
   }, [value, apiPath, type]);
 

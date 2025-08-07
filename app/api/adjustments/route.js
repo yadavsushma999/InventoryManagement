@@ -14,7 +14,6 @@ export async function POST(request) {
         }
 
         const adjustment = { transferStockQty: qty, receivingBranchId, notes };
-        console.log(adjustment);
 
         // 🚩 Implement your creation logic here when ready
 
@@ -33,7 +32,6 @@ export async function POST(request) {
 // -----------------------------
 export async function GET() {
     try {
-        console.log("Fetching transfer adjustments...");
 
         const transfers = await db.transferStockAdjustment.findMany({
             orderBy: { createdAt: "desc" },
@@ -43,8 +41,6 @@ export async function GET() {
                 receivingWarehouse: { select: { id: true, title: true } },
             },
         });
-
-        console.log(`Fetched ${transfers.length} transfers.`);
         return NextResponse.json(transfers);
     } catch (error) {
         console.error(error);

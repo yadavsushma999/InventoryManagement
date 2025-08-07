@@ -4,7 +4,6 @@ import db from "@/lib/db"; // assuming Prisma
 
 export async function POST(req) {
     const { entity, title } = await req.json();
-    console.log(entity,title);
 
     if (!db[entity]) {
         return NextResponse.json({ error: "Invalid entity" }, { status: 400 });

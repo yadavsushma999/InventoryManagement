@@ -6,7 +6,8 @@ import warehouse from "./Warehouse.png";
 import units from "./inventory_units.png"
 import suppliers from "./suppliers.png"
 import newItems from "./newitem.png"
+import notfound from "./404notfound.gif"
 
 
 
-export { AddItems, Categories,Brands,warehouse,units,suppliers,newItems };
+export { AddItems, Categories,Brands,warehouse,units,suppliers,newItems,notfound };

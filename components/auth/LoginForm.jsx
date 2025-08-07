@@ -13,10 +13,8 @@ export default function LoginForm() {
         formState: { errors },
     } = useForm();
     const [loading, setLoading] = useState(false);
-    console.log(loading);
     async function onSubmit(data) {
         try {
-            console.log(data.email, data.password);
             setLoading(true);
             const loginData = await signIn("credentials", {
                 ...data,

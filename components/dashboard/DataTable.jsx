@@ -257,6 +257,7 @@ export default function DataTable({
               columns={columns}
               groupBy={groupBy}
               setGroupBy={setGroupBy}
+              type = {resourceTitle}
             />
           </FilterSlideOver>
         </div>

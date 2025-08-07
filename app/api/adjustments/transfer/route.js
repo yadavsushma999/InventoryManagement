@@ -137,7 +137,7 @@ export async function GET(request) {
         })
         return NextResponse.json(items);
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return NextResponse.json({
             error,
             message: "Failed to fetch the Transfer Adjustments"

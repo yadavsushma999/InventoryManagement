@@ -1,6 +1,6 @@
 "use client";
 import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   AlignJustify,
   Bell,
@@ -28,6 +28,10 @@ import AutoSuggestInput from "@/components/dashboard/AutoSuggestionInput";
 
 export default function Header({ setShowSidebar }) {
   const { search, setSearch } = useSearchStore();
+  const pathname = usePathname(); // e.g., "/dashboard/inventory/warehouse"
+  const segments = pathname?.split('/').filter(Boolean); // ["dashboard", "inventory", "warehouse"]
+  const type = segments[segments.length - 1];
+
   return (
     <AuthenticatedUser>
       {({ username, initials, session }) => (
@@ -46,8 +50,8 @@ export default function Header({ setShowSidebar }) {
                 onChange={setSearch}
                 onSelect={(item) => setSearch(item.title)}
                 apiPath="/api/suggestions"
-                type="item"
-                placeholder="Search items by title, SKU, category..."
+                type={type}
+                placeholder="Type Keywords..."
               />
             </div>
           </div>

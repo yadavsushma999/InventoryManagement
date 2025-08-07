@@ -3,7 +3,8 @@ import db from "@/lib/db";
 import { softCreate, softDelete, softReactivate } from "@/lib/softCrud";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
- // make sure this points to your NextAuth config
+import { getFilters } from "@/lib/filters/getFilters";
+// make sure this points to your NextAuth config
 
 // ✅ CONFIG
 const MODEL = "unit";
@@ -12,18 +13,75 @@ const UNIQUE_FIELD = "title";
 /**
  * GET: List only active
  */
-export async function GET() {
+
+export async function GET(request) {
     try {
-        const items = await db[MODEL].findMany({
-            where: { isActive: true },
-        });
-        console.log("items",items);
-        return NextResponse.json(items);
+        const {
+            take = 10,
+            skip = 0,
+            sortBy = "createdAt",
+            sortOrder = "desc",
+            search = "",
+            status = "active",
+        } = getFilters(request);
+
+        const where = {};
+
+        // Filter by active/inactive
+        if (status === "active") {
+            where.isActive = true;
+        } else if (status === "inactive") {
+            where.isActive = false;
+        }
+
+        // Search in title or abbreviation
+        if (search) {
+            where.OR = [
+                {
+                    title: {
+                        contains: search,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    abbreviation: {
+                        contains: search,
+                        mode: "insensitive",
+                    },
+                },
+            ];
+        }
+
+        const [units, totalCount] = await Promise.all([
+            db.unit.findMany({
+                where,
+                take,
+                skip,
+                orderBy: {
+                    [sortBy]: sortOrder,
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    abbreviation: true,
+                    isActive: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+            }),
+            db.unit.count({ where }),
+        ]);
+
+        return NextResponse.json({ items: units, totalCount });
     } catch (err) {
-        console.error(err);
-        return NextResponse.json({ message: "Failed to list" }, { status: 500 });
+        console.error("❌ [GET /api/units] Error:", err);
+        return NextResponse.json(
+            { message: "Failed to fetch units", error: err.message || "Unknown error" },
+            { status: 500 }
+        );
     }
 }
+
 
 /**
  * POST: Create or prompt to reactivate
@@ -34,9 +92,9 @@ export async function POST(request) {
 
     try {
         const body = await request.json();
-        const { title,abbreviation } = body;
+        const { title, abbreviation } = body;
 
-        const result = await softCreate(MODEL, UNIQUE_FIELD, title, { title,abbreviation });
+        const result = await softCreate(MODEL, UNIQUE_FIELD, title, { title, abbreviation });
 
         if (result.type === "exists") {
             return NextResponse.json({ message: "Already exists" }, { status: 400 });

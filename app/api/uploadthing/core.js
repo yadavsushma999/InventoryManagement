@@ -20,7 +20,6 @@ export const ourFileRouter = {
         // Set permissions and file types for this FileRoute
 
         .onUploadComplete(async ({ metadata, file }) => {
-            console.log("✅ Uploaded file:", file.url);
             return { uploadedUrl: file.url };
         })
 

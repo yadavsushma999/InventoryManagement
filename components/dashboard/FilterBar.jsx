@@ -22,6 +22,7 @@ export default function FilterBar({
   groupBy,
   setGroupBy,
   columns,
+  type,
 }) {
   const sortOrderOptions = [
     { value: "asc", label: "⬆️ Asc" },
@@ -49,6 +50,7 @@ export default function FilterBar({
             onChange={setSearch}
             apiPath="/api/suggestions"
             placeholder="Type keywords..."
+            type = {type}
           />
         </div>
 
